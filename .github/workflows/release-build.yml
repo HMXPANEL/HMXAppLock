@@ -26,8 +26,17 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-      - name: 🐘 Setup Gradle
-        uses: gradle/actions/setup-gradle@v3
+      - name: 🐘 Cache Gradle
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: ${{ runner.os }}-gradle-
+
+      - name: 🔧 Fix gradlew permission
+        run: chmod +x gradlew
 
       - name: 🔑 Decode Keystore
         env:
@@ -67,7 +76,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 # ─────────────────────────────────────────────────────────────────────────────
-# REQUIRED GITHUB SECRETS (Settings → Secrets → Actions):
+# REQUIRED SECRETS (Settings → Secrets → Actions):
 #   KEYSTORE_BASE64    — base64 of your .keystore file
 #   KEYSTORE_PASSWORD  — keystore password
 #   KEY_ALIAS          — key alias
