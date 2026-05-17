@@ -6,7 +6,6 @@
     <!-- PERMISSIONS                                                         -->
     <!-- ═══════════════════════════════════════════════════════════════════ -->
 
-    <!-- Core lock engine -->
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
     <uses-permission android:name="android.permission.PACKAGE_USAGE_STATS"
         tools:ignore="ProtectedPermissions" />
@@ -16,15 +15,9 @@
     <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES"
         tools:ignore="QueryAllPackagesPermission" />
     <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
-
-    <!-- Auth -->
     <uses-permission android:name="android.permission.USE_BIOMETRIC" />
     <uses-permission android:name="android.permission.USE_FINGERPRINT" />
-
-    <!-- Notifications (Android 13+) -->
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
-
-    <!-- Intruder detection (Phase 3) -->
     <uses-permission android:name="android.permission.CAMERA" />
 
     <!-- ═══════════════════════════════════════════════════════════════════ -->
@@ -38,7 +31,6 @@
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.HMXShield"
         tools:targetApi="31">
@@ -47,17 +39,13 @@
         <activity
             android:name=".MainActivity"
             android:exported="true"
-            android:theme="@style/Theme.HMXShield.Splash"
+            android:theme="@style/Theme.HMXShield"
             android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <!-- ════════════════════════════════════════════════════════════ -->
-        <!-- SERVICES                                                     -->
-        <!-- ════════════════════════════════════════════════════════════ -->
 
         <!-- Accessibility Service — primary foreground app detection -->
         <service
@@ -83,10 +71,6 @@
                 android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
                 android:value="appLockProtection" />
         </service>
-
-        <!-- ════════════════════════════════════════════════════════════ -->
-        <!-- RECEIVERS                                                    -->
-        <!-- ════════════════════════════════════════════════════════════ -->
 
         <!-- Boot Receiver — restore protection after reboot -->
         <receiver
