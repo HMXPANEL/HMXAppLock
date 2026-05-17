@@ -1,6 +1,7 @@
 package com.hmx.shield.features.onboarding.presentation.screen
 
 import androidx.compose.animation.core.*
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.pager.HorizontalPager
@@ -19,7 +20,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.datastore.preferences.core.booleanPreferencesKey
 import com.hmx.shield.core.components.GlowButton
 import com.hmx.shield.core.theme.*
 import kotlinx.coroutines.delay
@@ -47,8 +47,6 @@ fun SplashScreen(
 
     LaunchedEffect(Unit) {
         delay(2000)
-        // TODO: check DataStore for setup completion flag
-        // For now, always go to welcome on first launch
         onSetupIncomplete()
     }
 
@@ -135,10 +133,10 @@ fun WelcomeScreen(onGetStarted: () -> Unit) {
 
         features.forEach { (icon, title, desc) ->
             Row(
-                modifier             = Modifier
+                modifier              = Modifier
                     .fillMaxWidth()
                     .padding(vertical = 10.dp),
-                verticalAlignment    = Alignment.CenterVertically,
+                verticalAlignment     = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 Box(
@@ -160,9 +158,11 @@ fun WelcomeScreen(onGetStarted: () -> Unit) {
         Spacer(modifier = Modifier.weight(1f))
 
         GlowButton(
-            text      = "Get Started",
-            onClick   = onGetStarted,
-            modifier  = Modifier.fillMaxWidth().height(52.dp)
+            text     = "Get Started",
+            onClick  = onGetStarted,
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(52.dp)
         )
         Spacer(modifier = Modifier.height(32.dp))
     }
@@ -179,16 +179,27 @@ private data class OnboardingPage(
 )
 
 private val onboardingPages = listOf(
-    OnboardingPage("🔒", "Lock Any App",
-        "Protect WhatsApp, Instagram, banking apps and more with PIN or fingerprint."),
-    OnboardingPage("🗄", "Private Vault",
-        "Hide photos, videos and documents in an AES-encrypted vault invisible to gallery apps."),
-    OnboardingPage("📸", "Intruder Detection",
-        "Automatically capture a selfie when someone enters the wrong PIN too many times."),
-    OnboardingPage("🌐", "100% Offline",
-        "All data stays on your device. No cloud sync, no analytics, no tracking. Ever.")
+    OnboardingPage(
+        "🔒", "Lock Any App",
+        "Protect WhatsApp, Instagram, banking apps and more with PIN or fingerprint."
+    ),
+    OnboardingPage(
+        "🗄", "Private Vault",
+        "Hide photos, videos and documents in an AES-encrypted vault invisible to gallery apps."
+    ),
+    OnboardingPage(
+        "📸", "Intruder Detection",
+        "Automatically capture a selfie when someone enters the wrong PIN too many times."
+    ),
+    OnboardingPage(
+        "🌐", "100% Offline",
+        "All data stays on your device. No cloud sync, no analytics, no tracking. Ever."
+    )
 )
 
+// @OptIn required because HorizontalPager + rememberPagerState are
+// marked @ExperimentalFoundationApi in this version of Compose BOM
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun OnboardingScreen(onContinue: () -> Unit) {
     val pagerState = rememberPagerState(pageCount = { onboardingPages.size })
@@ -206,42 +217,71 @@ fun OnboardingScreen(onContinue: () -> Unit) {
         ) { page ->
             val item = onboardingPages[page]
             Column(
-                modifier              = Modifier.fillMaxSize().padding(40.dp),
+                modifier              = Modifier
+                    .fillMaxSize()
+                    .padding(40.dp),
                 horizontalAlignment   = Alignment.CenterHorizontally,
                 verticalArrangement   = Arrangement.Center
             ) {
                 Text(item.emoji, fontSize = 72.sp)
                 Spacer(modifier = Modifier.height(32.dp))
-                Text(item.title, color = TextPrimary, fontSize = 24.sp, fontWeight = FontWeight.Bold, textAlign = TextAlign.Center)
+                Text(
+                    text       = item.title,
+                    color      = TextPrimary,
+                    fontSize   = 24.sp,
+                    fontWeight = FontWeight.Bold,
+                    textAlign  = TextAlign.Center
+                )
                 Spacer(modifier = Modifier.height(12.dp))
-                Text(item.description, color = TextSecondary, fontSize = 15.sp, textAlign = TextAlign.Center, lineHeight = 23.sp)
-            }
-        }
-
-        // Pager dots
-        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            repeat(onboardingPages.size) { i ->
-                Box(
-                    modifier = Modifier
-                        .size(if (i == pagerState.currentPage) 20.dp else 8.dp, 8.dp)
-                        .clip(RoundedCornerShape(4.dp))
-                        .background(if (i == pagerState.currentPage) AccentPurple else BorderColor)
+                Text(
+                    text       = item.description,
+                    color      = TextSecondary,
+                    fontSize   = 15.sp,
+                    textAlign  = TextAlign.Center,
+                    lineHeight = 23.sp
                 )
             }
         }
 
-        Spacer(modifier = Modifier.height(32.dp))
+        // Pager indicator dots
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            modifier              = Modifier.padding(bottom = 8.dp)
+        ) {
+            repeat(onboardingPages.size) { i ->
+                val isSelected = i == pagerState.currentPage
+                Box(
+                    modifier = Modifier
+                        .size(
+                            width  = if (isSelected) 20.dp else 8.dp,
+                            height = 8.dp
+                        )
+                        .clip(RoundedCornerShape(4.dp))
+                        .background(if (isSelected) AccentPurple else BorderColor)
+                )
+            }
+        }
+
+        Spacer(modifier = Modifier.height(24.dp))
 
         GlowButton(
-            text     = if (pagerState.currentPage == onboardingPages.lastIndex) "Set Up Protection" else "Next",
-            onClick  = {
+            text    = if (pagerState.currentPage == onboardingPages.lastIndex)
+                          "Set Up Protection"
+                      else
+                          "Next",
+            onClick = {
                 if (pagerState.currentPage == onboardingPages.lastIndex) {
                     onContinue()
                 } else {
-                    scope.launch { pagerState.animateScrollToPage(pagerState.currentPage + 1) }
+                    scope.launch {
+                        pagerState.animateScrollToPage(pagerState.currentPage + 1)
+                    }
                 }
             },
-            modifier = Modifier.padding(horizontal = 40.dp).fillMaxWidth().height(52.dp)
+            modifier = Modifier
+                .padding(horizontal = 40.dp)
+                .fillMaxWidth()
+                .height(52.dp)
         )
         Spacer(modifier = Modifier.height(40.dp))
     }
@@ -255,7 +295,7 @@ fun OnboardingScreen(onContinue: () -> Unit) {
 fun LockCreationScreen(onLockCreated: () -> Unit) {
     var pin        by remember { mutableStateOf("") }
     var confirmPin by remember { mutableStateOf("") }
-    var step       by remember { mutableIntStateOf(0) } // 0=create, 1=confirm
+    var step       by remember { mutableIntStateOf(0) }
     var error      by remember { mutableStateOf("") }
     val maxLen = 6
 
@@ -276,15 +316,18 @@ fun LockCreationScreen(onLockCreated: () -> Unit) {
             fontWeight = FontWeight.SemiBold
         )
         Text(
-            text    = if (step == 0) "This PIN protects all your locked apps" else "Enter the same PIN again",
-            color   = TextSecondary,
-            fontSize = 13.sp,
+            text      = if (step == 0) "This PIN protects all your locked apps"
+                        else "Enter the same PIN again",
+            color     = TextSecondary,
+            fontSize  = 13.sp,
             textAlign = TextAlign.Center
         )
+
         if (error.isNotEmpty()) {
             Spacer(modifier = Modifier.height(8.dp))
             Text(error, color = ColorError, fontSize = 13.sp)
         }
+
         Spacer(modifier = Modifier.height(32.dp))
 
         // PIN dots
@@ -302,8 +345,14 @@ fun LockCreationScreen(onLockCreated: () -> Unit) {
 
         Spacer(modifier = Modifier.height(32.dp))
 
-        // Simple numpad
-        val rows = listOf(listOf("1","2","3"), listOf("4","5","6"), listOf("7","8","9"), listOf("","0","⌫"))
+        // Numpad
+        val rows = listOf(
+            listOf("1", "2", "3"),
+            listOf("4", "5", "6"),
+            listOf("7", "8", "9"),
+            listOf("",  "0", "⌫")
+        )
+
         rows.forEach { row ->
             Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
                 row.forEach { key ->
@@ -312,8 +361,13 @@ fun LockCreationScreen(onLockCreated: () -> Unit) {
                         else -> Button(
                             onClick = {
                                 when (key) {
-                                    "⌫" -> if (step == 0) { if (pin.isNotEmpty()) pin = pin.dropLast(1) }
-                                           else { if (confirmPin.isNotEmpty()) confirmPin = confirmPin.dropLast(1) }
+                                    "⌫" -> {
+                                        if (step == 0) {
+                                            if (pin.isNotEmpty()) pin = pin.dropLast(1)
+                                        } else {
+                                            if (confirmPin.isNotEmpty()) confirmPin = confirmPin.dropLast(1)
+                                        }
+                                    }
                                     else -> {
                                         error = ""
                                         if (step == 0 && pin.length < maxLen) {
@@ -323,7 +377,7 @@ fun LockCreationScreen(onLockCreated: () -> Unit) {
                                             confirmPin += key
                                             if (confirmPin.length == maxLen) {
                                                 if (confirmPin == pin) {
-                                                    // TODO: save hashed PIN to DataStore
+                                                    // TODO Phase 3: hash and store PIN securely
                                                     onLockCreated()
                                                 } else {
                                                     error = "PINs don't match. Try again."
@@ -334,15 +388,19 @@ fun LockCreationScreen(onLockCreated: () -> Unit) {
                                     }
                                 }
                             },
-                            modifier = Modifier.size(72.dp),
-                            shape    = CircleShape,
-                            colors   = ButtonDefaults.buttonColors(
+                            modifier  = Modifier.size(72.dp),
+                            shape     = CircleShape,
+                            colors    = ButtonDefaults.buttonColors(
                                 containerColor = if (key == "⌫") Color.Transparent else NumKeyBg,
                                 contentColor   = TextPrimary
                             ),
                             elevation = ButtonDefaults.buttonElevation(0.dp, 0.dp)
                         ) {
-                            Text(key, fontSize = if (key == "⌫") 20.sp else 22.sp, fontWeight = FontWeight.Medium)
+                            Text(
+                                text       = key,
+                                fontSize   = if (key == "⌫") 20.sp else 22.sp,
+                                fontWeight = FontWeight.Medium
+                            )
                         }
                     }
                 }
