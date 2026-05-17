@@ -35,8 +35,12 @@ jobs:
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
           restore-keys: ${{ runner.os }}-gradle-
 
-      - name: 🔧 Fix gradlew permission
-        run: chmod +x gradlew
+      - name: 📦 Download Gradle Wrapper JAR
+        run: |
+          mkdir -p gradle/wrapper
+          curl -fsSL https://github.com/gradle/gradle/raw/v8.7.0/gradle/wrapper/gradle-wrapper.jar \
+            -o gradle/wrapper/gradle-wrapper.jar
+          chmod +x gradlew
 
       - name: 🔑 Decode Keystore
         env:
@@ -76,8 +80,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 # ─────────────────────────────────────────────────────────────────────────────
-# REQUIRED SECRETS (Settings → Secrets → Actions):
-#   KEYSTORE_BASE64    — base64 of your .keystore file
+# REQUIRED SECRETS (repo Settings → Secrets → Actions):
+#   KEYSTORE_BASE64    — base64-encoded .keystore file
 #   KEYSTORE_PASSWORD  — keystore password
 #   KEY_ALIAS          — key alias
 #   KEY_PASSWORD       — key password
