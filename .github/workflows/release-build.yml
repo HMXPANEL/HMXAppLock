@@ -3,7 +3,7 @@ name: 🚀 Release Build
 on:
   push:
     tags:
-      - 'v*.*.*'   # Trigger on version tags: v1.0.0, v1.2.3, etc.
+      - 'v*.*.*'
   workflow_dispatch:
     inputs:
       version_name:
@@ -26,18 +26,8 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-      - name: 🐘 Cache Gradle packages
-        uses: actions/cache@v4
-        with:
-          path: |
-            ~/.gradle/caches
-            ~/.gradle/wrapper
-          key: gradle-${{ runner.os }}-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties', '**/libs.versions.toml') }}
-          restore-keys: |
-            gradle-${{ runner.os }}-
-
-      - name: 🔧 Grant execute permission to gradlew
-        run: chmod +x ./gradlew
+      - name: 🐘 Setup Gradle
+        uses: gradle/actions/setup-gradle@v3
 
       - name: 🔑 Decode Keystore
         env:
@@ -73,30 +63,13 @@ jobs:
         with:
           files: app/build/outputs/apk/release/hmxshield-*.apk
           generate_release_notes: true
-          body: |
-            ## 🛡 HMX Shield ${{ github.ref_name }}
-
-            ### Installation
-            1. Download `hmxshield-${{ github.ref_name }}.apk`
-            2. Enable "Install from Unknown Sources" on your device
-            3. Install and follow the setup wizard
-
-            ### ⚠️ Required Setup After Install
-            - Enable Accessibility Service
-            - Allow Display Over Other Apps
-            - Disable Battery Optimization
-
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-# ────────────────────────────────────────────────────────────────────────────
+# ─────────────────────────────────────────────────────────────────────────────
 # REQUIRED GITHUB SECRETS (Settings → Secrets → Actions):
-#
-#   KEYSTORE_BASE64      — base64-encoded keystore file
-#                          Generate with: base64 -i your.keystore | tr -d '\n'
-#   KEYSTORE_PASSWORD    — keystore password
-#   KEY_ALIAS            — key alias inside keystore
-#   KEY_PASSWORD         — key password
-#
-# NEVER commit the keystore file or any password to the repository.
-# ────────────────────────────────────────────────────────────────────────────
+#   KEYSTORE_BASE64    — base64 of your .keystore file
+#   KEYSTORE_PASSWORD  — keystore password
+#   KEY_ALIAS          — key alias
+#   KEY_PASSWORD       — key password
+# ─────────────────────────────────────────────────────────────────────────────
