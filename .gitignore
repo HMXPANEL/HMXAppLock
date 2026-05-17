@@ -1,0 +1,24 @@
+*.iml
+.gradle
+/local.properties
+/.idea
+.DS_Store
+/build
+/captures
+.externalNativeBuild
+.cxx
+local.properties
+
+# Keystore — NEVER commit
+*.keystore
+*.jks
+
+# APK files — built by CI
+*.apk
+*.aab
+
+# Room schema — commit this for migration tracking
+# /app/schemas  ← keep this, don't ignore
+
+# Nightly build outputs
+app/build/

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Backup rules for HMX Shield.
+  We exclude the encrypted database and session files from backups
+  because sessions should not persist across device restores.
+  Users must re-authenticate on a new device.
+-->
+<full-backup-content>
+    <exclude domain="database" path="hmx_shield_db" />
+    <exclude domain="sharedpref" path="." />
+</full-backup-content>

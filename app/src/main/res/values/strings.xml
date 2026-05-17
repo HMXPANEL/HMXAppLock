@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">HMX Shield</string>
+    <string name="accessibility_service_label">HMX Shield App Lock</string>
+    <string name="accessibility_service_description">HMX Shield uses Accessibility Service to detect when protected apps are opened so it can display a secure lock screen. No other data is read, stored, or transmitted. All processing happens entirely on your device.</string>
+    <string name="notification_channel_name">HMX Shield Protection</string>
+    <string name="notification_channel_desc">App lock protection is active</string>
+    <string name="notification_title">HMX Shield Active</string>
+    <string name="notification_text">Your apps are protected</string>
+</resources>
