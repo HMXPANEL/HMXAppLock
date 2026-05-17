@@ -38,7 +38,24 @@ jobs:
           chmod +x gradlew
 
       - name: 🏗️ Build Debug APK
-        run: ./gradlew assembleDebug --stacktrace --no-daemon
+        run: ./gradlew assembleDebug --stacktrace --no-daemon --info 2>&1 | tee build.log || true
+
+      - name: 🔍 Show Kotlin Errors
+        if: always()
+        run: |
+          echo "====== KOTLIN / JAVA ERRORS ======"
+          grep -E "error:|warning:|\.kt:[0-9]+|\.java:[0-9]+|Unresolved reference|Cannot find|not found|cannot access|None of the following" build.log | head -100 || echo "No error lines found"
+          echo ""
+          echo "====== LAST 150 LINES OF BUILD LOG ======"
+          tail -150 build.log
+
+      - name: 📄 Upload Full Build Log
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: build-log-${{ github.run_number }}
+          path: build.log
+          retention-days: 3
 
       - name: 📦 Upload Debug APK
         uses: actions/upload-artifact@v4
@@ -53,10 +70,8 @@ jobs:
         if: always()
         run: |
           echo "## 🛡 HMX Shield Debug Build" >> $GITHUB_STEP_SUMMARY
-          echo "- **Branch:** ${{ github.ref_name }}" >> $GITHUB_STEP_SUMMARY
-          echo "- **Commit:** ${{ github.sha }}" >> $GITHUB_STEP_SUMMARY
           if [ -f app/build/outputs/apk/debug/app-debug.apk ]; then
             echo "- ✅ APK built — download from Artifacts above" >> $GITHUB_STEP_SUMMARY
           else
-            echo "- ❌ Build failed — check logs above" >> $GITHUB_STEP_SUMMARY
+            echo "- ❌ Build failed — download **build-log** artifact and check errors" >> $GITHUB_STEP_SUMMARY
           fi
