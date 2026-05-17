@@ -31,8 +31,12 @@ jobs:
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
           restore-keys: ${{ runner.os }}-gradle-
 
-      - name: 🔧 Fix gradlew permission
-        run: chmod +x gradlew
+      - name: 📦 Download Gradle Wrapper JAR
+        run: |
+          mkdir -p gradle/wrapper
+          curl -fsSL https://github.com/gradle/gradle/raw/v8.7.0/gradle/wrapper/gradle-wrapper.jar \
+            -o gradle/wrapper/gradle-wrapper.jar
+          chmod +x gradlew
 
       - name: 🔍 Run Lint
         run: ./gradlew lintDebug --no-daemon --continue
