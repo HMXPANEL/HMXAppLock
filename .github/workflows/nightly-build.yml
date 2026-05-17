@@ -12,7 +12,7 @@ jobs:
     timeout-minutes: 30
 
     steps:
-      - name: 📥 Checkout develop branch
+      - name: 📥 Checkout main branch
         uses: actions/checkout@v4
         with:
           ref: main
@@ -32,8 +32,12 @@ jobs:
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
           restore-keys: ${{ runner.os }}-gradle-
 
-      - name: 🔧 Fix gradlew permission
-        run: chmod +x gradlew
+      - name: 📦 Download Gradle Wrapper JAR
+        run: |
+          mkdir -p gradle/wrapper
+          curl -fsSL https://github.com/gradle/gradle/raw/v8.7.0/gradle/wrapper/gradle-wrapper.jar \
+            -o gradle/wrapper/gradle-wrapper.jar
+          chmod +x gradlew
 
       - name: 🏗️ Build Debug APK
         run: ./gradlew assembleDebug --no-daemon
