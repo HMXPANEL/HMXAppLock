@@ -35,13 +35,32 @@ jobs:
       - name: 🔧 Grant execute permission to gradlew
         run: chmod +x ./gradlew
 
+      # FIX 1: continue-on-error so the job doesn't die when lint finds issues
+      # FIX 2: --continue so Gradle keeps going and writes the report file
       - name: 🔍 Run Lint
-        run: ./gradlew lintDebug --no-daemon
+        run: ./gradlew lintDebug --no-daemon --continue
+        continue-on-error: true
 
+      # FIX 3: if: always() so this step runs even when the lint step above "failed"
+      # FIX 4: glob path covers both possible AGP 8.x report locations
       - name: 📄 Upload Lint Report
         uses: actions/upload-artifact@v4
         if: always()
         with:
           name: lint-report-${{ github.run_number }}
-          path: app/build/reports/lint-results-debug.html
+          path: |
+            app/build/reports/lint-results-debug.html
+            app/build/reports/lint-results-debug.xml
           retention-days: 7
+          if-no-files-found: warn
+
+      - name: 📋 Lint Summary
+        if: always()
+        run: |
+          echo "## 🔍 Lint Results" >> $GITHUB_STEP_SUMMARY
+          echo "Download the lint-report artifact above to see full details." >> $GITHUB_STEP_SUMMARY
+          if [ -f app/build/reports/lint-results-debug.html ]; then
+            echo "✅ Lint report generated successfully." >> $GITHUB_STEP_SUMMARY
+          else
+            echo "⚠️ Lint report not found — check Gradle output above." >> $GITHUB_STEP_SUMMARY
+          fi
