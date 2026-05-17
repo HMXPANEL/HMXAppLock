@@ -3,7 +3,7 @@ name: 🔨 Debug Build
 on:
   push:
     branches: [ develop, main, "feature/**" ]
-  workflow_dispatch:   # Allow manual trigger from GitHub Actions UI
+  workflow_dispatch:
 
 jobs:
   build-debug:
@@ -21,23 +21,15 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-      - name: 🐘 Cache Gradle packages
-        uses: actions/cache@v4
+      - name: 🐘 Setup Gradle
+        uses: gradle/actions/setup-gradle@v3
         with:
-          path: |
-            ~/.gradle/caches
-            ~/.gradle/wrapper
-          key: gradle-${{ runner.os }}-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties', '**/libs.versions.toml') }}
-          restore-keys: |
-            gradle-${{ runner.os }}-
-
-      - name: 🔧 Grant execute permission to gradlew
-        run: chmod +x ./gradlew
+          cache-read-only: false
 
       - name: 🏗️ Build Debug APK
         run: ./gradlew assembleDebug --stacktrace --no-daemon
 
-      - name: 📦 Upload Debug APK artifact
+      - name: 📦 Upload Debug APK
         uses: actions/upload-artifact@v4
         with:
           name: hmxshield-debug-${{ github.run_number }}
