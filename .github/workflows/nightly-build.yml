@@ -2,8 +2,8 @@ name: 🌙 Nightly Build
 
 on:
   schedule:
-    - cron: '0 2 * * *'   # Every day at 02:00 UTC
-  workflow_dispatch:        # Manual trigger
+    - cron: '0 2 * * *'
+  workflow_dispatch:
 
 jobs:
   nightly:
@@ -23,18 +23,10 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-      - name: 🐘 Cache Gradle (fresh for nightly to catch stale caches)
-        uses: actions/cache@v4
+      - name: 🐘 Setup Gradle
+        uses: gradle/actions/setup-gradle@v3
         with:
-          path: |
-            ~/.gradle/caches
-            ~/.gradle/wrapper
-          key: nightly-gradle-${{ runner.os }}-${{ github.run_id }}
-          restore-keys: |
-            nightly-gradle-${{ runner.os }}-
-
-      - name: 🔧 Grant execute permission to gradlew
-        run: chmod +x ./gradlew
+          cache-read-only: false
 
       - name: 🏗️ Build Debug APK
         run: ./gradlew assembleDebug --no-daemon --refresh-dependencies
@@ -49,16 +41,13 @@ jobs:
           path: app/build/outputs/apk/debug/app-debug.apk
           retention-days: 3
 
-      - name: 📣 Notify on Failure
-        if: failure()
+      - name: 📋 Nightly Summary
+        if: always()
         run: |
-          echo "## ❌ Nightly Build FAILED" >> $GITHUB_STEP_SUMMARY
-          echo "Check the logs above for dependency or compilation issues." >> $GITHUB_STEP_SUMMARY
-          echo "Branch: develop | Run: ${{ github.run_number }}" >> $GITHUB_STEP_SUMMARY
-
-      - name: ✅ Nightly Summary
-        if: success()
-        run: |
-          echo "## ✅ Nightly Build Passed" >> $GITHUB_STEP_SUMMARY
-          echo "- Branch: develop" >> $GITHUB_STEP_SUMMARY
-          echo "- APK available for 3 days in Artifacts" >> $GITHUB_STEP_SUMMARY
+          if [ "${{ job.status }}" == "success" ]; then
+            echo "## ✅ Nightly Build Passed" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "## ❌ Nightly Build FAILED" >> $GITHUB_STEP_SUMMARY
+            echo "Check logs for dependency or compilation issues." >> $GITHUB_STEP_SUMMARY
+          fi
+          echo "- Branch: develop | Run: ${{ github.run_number }}" >> $GITHUB_STEP_SUMMARY
