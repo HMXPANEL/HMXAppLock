@@ -32,8 +32,8 @@ jobs:
           restore-keys: |
             gradle-${{ runner.os }}-
 
-      - name: 🔧 Grant execute permission to gradlew
-        run: chmod +x ./gradlew
+      - name: 🐘 Setup Gradle
+        uses: gradle/actions/setup-gradle@v3
 
       # FIX 1: continue-on-error so the job doesn't die when lint finds issues
       # FIX 2: --continue so Gradle keeps going and writes the report file
