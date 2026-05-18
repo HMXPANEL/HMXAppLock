@@ -21,8 +21,8 @@ android {
 
     buildTypes {
         debug {
-            applicationIdSuffix = ".debug"
-            versionNameSuffix = "-debug"
+            // Removed applicationIdSuffix — keeps package name as com.hmx.shield
+            // in both debug and release, so accessibility service name always matches
             isDebuggable = true
             isMinifyEnabled = false
         }
@@ -33,8 +33,6 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
-            // Signing config loaded from environment in CI
-            // signingConfig = signingConfigs.getByName("release")
         }
     }
 
@@ -52,7 +50,6 @@ android {
         buildConfig = true
     }
 
-    // Room schema export directory
     ksp {
         arg("room.schemaLocation", "$projectDir/schemas")
         arg("room.incremental", "true")
@@ -87,12 +84,12 @@ dependencies {
     implementation(libs.androidx.material3)
     implementation(libs.androidx.navigation.compose)
 
-    // Hilt DI
+    // Hilt
     implementation(libs.hilt.android)
     ksp(libs.hilt.compiler)
     implementation(libs.hilt.navigation.compose)
 
-    // Room Database
+    // Room
     implementation(libs.room.runtime)
     implementation(libs.room.ktx)
     ksp(libs.room.compiler)
