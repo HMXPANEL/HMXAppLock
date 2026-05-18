@@ -14,7 +14,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import javax.inject.Inject
 import javax.inject.Singleton
 
-// ─── Permission Status Data Class ────────────────────────────────────────────
+// ─── Permission Status ────────────────────────────────────────────────────────
 
 data class PermissionStatus(
     val accessibilityEnabled: Boolean,
@@ -22,13 +22,6 @@ data class PermissionStatus(
     val usageAccessGranted: Boolean,
     val batteryOptimizationExempt: Boolean
 ) {
-    /**
-     * Derive overall security health from permission states.
-     *
-     * CRITICAL → core engine cannot function (overlay or accessibility missing)
-     * WARNING  → protection degraded but partially working
-     * HEALTHY  → all critical permissions active
-     */
     val overallHealth: SecurityHealth
         get() = when {
             !accessibilityEnabled || !overlayGranted -> SecurityHealth.CRITICAL
@@ -37,7 +30,7 @@ data class PermissionStatus(
         }
 }
 
-// ─── PermissionMonitor ───────────────────────────────────────────────────────
+// ─── PermissionMonitor ────────────────────────────────────────────────────────
 
 @Singleton
 class PermissionMonitor @Inject constructor(
@@ -47,41 +40,46 @@ class PermissionMonitor @Inject constructor(
     private val _status = MutableStateFlow(checkAll())
     val status: StateFlow<PermissionStatus> = _status.asStateFlow()
 
-    /**
-     * Re-check all permissions and push the result to [status].
-     * Should be called on:
-     *   - App foreground
-     *   - After returning from Settings
-     *   - Service restart
-     *   - Periodic background checks (every 30s via ServiceHealthMonitor)
-     */
     fun refresh() {
         val current = checkAll()
         _status.value = current
         lockStateManager.updateSecurityHealth(current.overallHealth)
     }
 
-    // ─── Individual Checks ───────────────────────────────────────────────────
+    // ─── Individual Checks ────────────────────────────────────────────────────
 
     private fun checkAll(): PermissionStatus = PermissionStatus(
-        accessibilityEnabled = isAccessibilityEnabled(),
-        overlayGranted = isOverlayGranted(),
-        usageAccessGranted = isUsageAccessGranted(),
+        accessibilityEnabled      = isAccessibilityEnabled(),
+        overlayGranted            = isOverlayGranted(),
+        usageAccessGranted        = isUsageAccessGranted(),
         batteryOptimizationExempt = isBatteryOptimizationExempt()
     )
 
     fun isAccessibilityEnabled(): Boolean {
-        // Check if our specific service appears in the enabled list
-        val serviceName =
-            "${context.packageName}/.system.accessibility.AppLockAccessibilityService"
-        val enabledServices = Settings.Secure.getString(
-            context.contentResolver,
-            Settings.Secure.ENABLED_ACCESSIBILITY_SERVICES
-        ) ?: return false
-        return enabledServices.contains(serviceName)
+        return try {
+            val enabledServices = Settings.Secure.getString(
+                context.contentResolver,
+                Settings.Secure.ENABLED_ACCESSIBILITY_SERVICES
+            ) ?: return false
+
+            // The service class full name never changes regardless of build type
+            val serviceClass =
+                "com.hmx.shield.system.accessibility.AppLockAccessibilityService"
+
+            // The package name DOES change between debug (.debug suffix) and release
+            // So we check if the service class appears anywhere in the enabled list
+            // This handles: com.hmx.shield/..., com.hmx.shield.debug/..., etc.
+            enabledServices
+                .split(":")
+                .any { entry -> entry.contains(serviceClass) }
+
+        } catch (e: Exception) {
+            false
+        }
     }
 
-    fun isOverlayGranted(): Boolean = Settings.canDrawOverlays(context)
+    fun isOverlayGranted(): Boolean =
+        Settings.canDrawOverlays(context)
 
     fun isUsageAccessGranted(): Boolean {
         return try {
@@ -107,7 +105,11 @@ class PermissionMonitor @Inject constructor(
     }
 
     fun isBatteryOptimizationExempt(): Boolean {
-        val pm = context.getSystemService(Context.POWER_SERVICE) as PowerManager
-        return pm.isIgnoringBatteryOptimizations(context.packageName)
+        return try {
+            val pm = context.getSystemService(Context.POWER_SERVICE) as PowerManager
+            pm.isIgnoringBatteryOptimizations(context.packageName)
+        } catch (e: Exception) {
+            false
+        }
     }
 }
