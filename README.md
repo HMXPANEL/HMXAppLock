@@ -1,3 +1,0 @@
-# hmxapplock
-
-Synced by GitSync
