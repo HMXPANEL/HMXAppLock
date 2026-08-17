@@ -1,0 +1,1125 @@
+FIGMA / WIREFRAMES — Advanced Android App Lock
+
+Version 1.0
+
+This document defines:
+
+screen wireframes
+
+layout structure
+
+navigation hierarchy
+
+component placement
+
+spacing behavior
+
+interaction flow
+
+responsive behavior
+
+
+Goal:
+
+premium
+minimal
+secure
+modern
+smooth
+
+The wireframes should feel like:
+
+a modern Android privacy OS layer
+
+not a generic utility app
+
+not a cluttered settings-heavy application
+
+
+
+---
+
+1. DESIGN GRID SYSTEM
+
+Base Grid
+
+Use:
+
+8dp spacing system
+
+
+---
+
+Screen Padding
+
+Device	Padding
+
+Mobile	16dp
+Tablet	24dp
+Foldable	adaptive
+
+
+
+---
+
+Layout Rules
+
+Use:
+
+safe areas
+
+edge-to-edge layouts
+
+floating surfaces
+
+layered depth
+
+
+Avoid:
+
+crowded layouts
+
+tiny buttons
+
+inconsistent spacing
+
+
+
+---
+
+2. SPLASH SCREEN WIREFRAME
+
+Purpose
+
+branding
+
+initialization
+
+quick security checks
+
+
+
+---
+
+Layout
+
+────────────────────
+
+        Logo
+
+    HMX Shield
+
+  “Private by Design”
+
+   Animated Glow Ring
+
+────────────────────
+
+
+---
+
+Components
+
+Component	Position
+
+Animated Logo	Center
+Tagline	Below logo
+Loading Indicator	Bottom center
+
+
+
+---
+
+Animation Example
+
+App Launch
+↓
+Logo Fade In
+↓
+Glow Pulse Animation
+↓
+Dashboard Loads
+
+
+---
+
+3. WELCOME SCREEN WIREFRAME
+
+Purpose
+
+Introduce:
+
+privacy-first philosophy
+
+local-only architecture
+
+premium security
+
+
+
+---
+
+Layout
+
+────────────────────
+
+[ Animated Illustration ]
+
+Protect Your Privacy
+
+Everything stays on your device.
+No cloud. No tracking.
+
+[ Get Started Button ]
+
+────────────────────
+
+
+---
+
+Components
+
+Component	Type
+
+Illustration	animated
+Title	headline
+Description	body
+CTA Button	GlowButton
+
+
+
+---
+
+Example Flow
+
+Tap Get Started
+↓
+Onboarding Starts
+
+
+---
+
+4. ONBOARDING SCREEN WIREFRAMES
+
+Purpose
+
+Explain:
+
+app locking
+
+vault
+
+intruder detection
+
+local privacy
+
+
+
+---
+
+Carousel Layout
+
+────────────────────
+
+[ Illustration ]
+
+Protect Apps
+
+Lock sensitive apps instantly.
+
+● ○ ○ ○
+
+[ Continue ]
+
+────────────────────
+
+
+---
+
+Pages
+
+Page	Content
+
+1	App Lock
+2	Vault
+3	Intruder Detection
+4	Offline Privacy
+
+
+
+---
+
+Example Animation
+
+Swipe Page
+↓
+Illustration Slides
+↓
+Indicator Updates
+
+
+---
+
+5. PERMISSION SETUP WIREFRAMES
+
+Purpose
+
+Request permissions progressively.
+
+
+---
+
+Accessibility Permission Screen
+
+────────────────────
+
+[ Accessibility Animation ]
+
+Enable Protection Engine
+
+Accessibility allows the app
+to detect protected apps.
+
+[ Enable Accessibility ]
+
+[ Skip ]
+
+────────────────────
+
+
+---
+
+Components
+
+Component	Type
+
+Illustration	Lottie
+Explanation Card	GlassCard
+Enable Button	GlowButton
+
+
+
+---
+
+Recovery Example
+
+Permission Denied
+↓
+Warning Card Appears
+↓
+Recovery Guide Opens
+
+
+---
+
+6. CREATE LOCK SCREEN WIREFRAME
+
+Purpose
+
+Create master authentication.
+
+
+---
+
+Layout
+
+────────────────────
+
+Create Your Lock
+
+[ PIN ]
+[ Pattern ]
+[ Password ]
+
+[ Continue ]
+
+────────────────────
+
+
+---
+
+PIN ENTRY SCREEN
+
+────────────────────
+
+Enter PIN
+
+● ● ○ ○
+
+[ 1 ] [ 2 ] [ 3 ]
+[ 4 ] [ 5 ] [ 6 ]
+[ 7 ] [ 8 ] [ 9 ]
+[ ⌫ ] [ 0 ] [ ✓ ]
+
+────────────────────
+
+
+---
+
+Example Interaction
+
+Tap Number
+↓
+Ripple Animation
+↓
+Digit Fills
+↓
+Haptic Feedback
+
+
+---
+
+7. BIOMETRIC SETUP SCREEN
+
+Purpose
+
+Enable fingerprint unlock.
+
+
+---
+
+Layout
+
+────────────────────
+
+[ Fingerprint Animation ]
+
+Enable Fingerprint Unlock
+
+Fast and secure authentication.
+
+[ Enable ]
+[ Skip ]
+
+────────────────────
+
+
+---
+
+Success Example
+
+Fingerprint Recognized
+↓
+Glow Ring Turns Green
+↓
+Success Transition
+
+
+---
+
+8. DASHBOARD WIREFRAME
+
+Purpose
+
+Main control center.
+
+
+---
+
+Layout Structure
+
+────────────────────
+
+Hello, User
+
+[ Security Score Card ]
+
+[ Quick Actions ]
+
+[ Locked Apps ]
+
+[ Vault Preview ]
+
+[ Intruder Alerts ]
+
+────────────────────
+
+
+---
+
+Security Score Card
+
+────────────────────
+
+Protection Active
+
+Security Score: 92%
+
+Overlay: Active
+Accessibility: Active
+
+────────────────────
+
+
+---
+
+Quick Actions Row
+
+Buttons:
+
+Lock Apps
+Open Vault
+Stealth Mode
+Panic Lock
+
+
+---
+
+Example Interaction
+
+Tap Lock Apps
+↓
+Animated Navigation
+↓
+App List Opens
+
+
+---
+
+9. BOTTOM NAVIGATION WIREFRAME
+
+Layout
+
+────────────────────
+
+ Home  Vault  Security
+
+ Themes  Settings
+
+────────────────────
+
+
+---
+
+Navigation Behavior
+
+Tab Selected
+↓
+Icon Scales
+↓
+Glow Activates
+↓
+Label Appears
+
+
+---
+
+10. APP LOCK SCREEN WIREFRAME
+
+Purpose
+
+Manage protected apps.
+
+
+---
+
+Layout
+
+────────────────────
+
+Search Apps
+
+[ WhatsApp ]      ON
+[ Instagram ]     ON
+[ Telegram ]      OFF
+[ Gallery ]       ON
+
+────────────────────
+
+
+---
+
+Components
+
+Component	Type
+
+Search Bar	GlassSearch
+App Row	LockAppCard
+Toggle	AnimatedToggle
+
+
+
+---
+
+Example Flow
+
+Enable Toggle
+↓
+App Added To Database
+↓
+Protection Activated
+
+
+---
+
+11. LOCK OVERLAY WIREFRAME
+
+Purpose
+
+Protect apps instantly.
+
+
+---
+
+Layout
+
+────────────────────
+
+[ App Icon ]
+
+WhatsApp Locked
+
+● ● ○ ○
+
+[ PIN Pad ]
+
+[ Fingerprint Prompt ]
+
+────────────────────
+
+
+---
+
+Overlay Behavior
+
+Protected App Opens
+↓
+Overlay Slides In
+↓
+Background Blur Applied
+↓
+Authentication Required
+
+
+---
+
+Failure Example
+
+Wrong PIN
+↓
+Shake Animation
+↓
+Attempt Counter Updates
+
+
+---
+
+12. VAULT HOME WIREFRAME
+
+Purpose
+
+Secure media management.
+
+
+---
+
+Layout
+
+────────────────────
+
+Vault
+
+[ Photos ]
+[ Videos ]
+[ Documents ]
+[ Audio ]
+
+[ Secure Grid ]
+
+────────────────────
+
+
+---
+
+Grid Example
+
+[ IMG ] [ IMG ]
+[ VID ] [ DOC ]
+
+
+---
+
+Example Flow
+
+Import File
+↓
+Encryption Begins
+↓
+Secure Thumbnail Generated
+↓
+Vault Refreshes
+
+
+---
+
+13. VAULT VIEWER WIREFRAME
+
+Purpose
+
+View decrypted content securely.
+
+
+---
+
+Layout
+
+────────────────────
+
+[ Full Screen Image ]
+
+[ Delete ] [ Export ]
+
+────────────────────
+
+
+---
+
+Security Behavior
+
+Open File
+↓
+Temporary Decryption
+↓
+View Content
+↓
+Memory Cleared On Exit
+
+
+---
+
+14. INTRUDER LOG SCREEN WIREFRAME
+
+Purpose
+
+Display unauthorized attempts.
+
+
+---
+
+Layout
+
+────────────────────
+
+Intruder Alerts
+
+[ Selfie Card ]
+Time: 4:32 PM
+Target: WhatsApp
+Attempts: 3
+
+────────────────────
+
+
+---
+
+Intruder Card Style
+
+Use:
+
+red glow
+
+warning border
+
+timeline layout
+
+
+
+---
+
+Example Flow
+
+Wrong PIN Multiple Times
+↓
+Selfie Captured
+↓
+Alert Appears In Dashboard
+
+
+---
+
+15. SECURITY CENTER WIREFRAME
+
+Purpose
+
+Centralized protection health.
+
+
+---
+
+Layout
+
+────────────────────
+
+Security Center
+
+Accessibility     ACTIVE
+Overlay            ACTIVE
+Battery            WARNING
+
+[ Fix Issues ]
+
+────────────────────
+
+
+---
+
+Example Recovery Flow
+
+Overlay Revoked
+↓
+Security Score Drops
+↓
+Recovery Card Appears
+
+
+---
+
+16. SETTINGS SCREEN WIREFRAME
+
+Layout
+
+────────────────────
+
+General
+Security
+Vault
+Themes
+Advanced
+About
+
+────────────────────
+
+
+---
+
+Settings Row Example
+
+────────────────────
+
+Fingerprint Unlock
+Enable biometric authentication
+
+[ Toggle ]
+
+────────────────────
+
+
+---
+
+17. THEME SCREEN WIREFRAME
+
+Purpose
+
+UI customization.
+
+
+---
+
+Layout
+
+────────────────────
+
+Themes
+
+[ Dark ]
+[ AMOLED ]
+[ Light ]
+
+Accent Colors
+
+● Purple
+● Cyan
+● Emerald
+
+────────────────────
+
+
+---
+
+Example Interaction
+
+Choose AMOLED
+↓
+Theme Transition Animates
+↓
+Entire App Updates
+
+
+---
+
+18. STEALTH MODE WIREFRAME
+
+Purpose
+
+Hide app presence.
+
+
+---
+
+Layout
+
+────────────────────
+
+Stealth Features
+
+[ Hide Launcher ]
+[ Calculator Mode ]
+[ Fake Crash ]
+
+────────────────────
+
+
+---
+
+Example Flow
+
+Enable Calculator Mode
+↓
+Launcher Alias Changes
+↓
+App Appears As Calculator
+
+
+---
+
+19. EMPTY STATE WIREFRAMES
+
+Locked Apps Empty State
+
+────────────────────
+
+No Locked Apps Yet
+
+Protect your private apps.
+
+[ Add Apps ]
+
+────────────────────
+
+
+---
+
+Vault Empty State
+
+────────────────────
+
+Vault Empty
+
+Import secure files.
+
+[ Import Files ]
+
+────────────────────
+
+
+---
+
+20. ERROR STATE WIREFRAMES
+
+Accessibility Disabled
+
+────────────────────
+
+Protection Paused
+
+Accessibility is disabled.
+Protection may not work.
+
+[ Fix Now ]
+
+────────────────────
+
+
+---
+
+Example Recovery Flow
+
+Accessibility Disabled
+↓
+Critical Alert Appears
+↓
+Recovery Button Opens Settings
+
+
+---
+
+21. TABLET / FOLDABLE WIREFRAMES
+
+Tablet Dashboard
+
+Use:
+
+dual-column layout
+
+larger cards
+
+side navigation option
+
+
+
+---
+
+Layout Example
+
+──────────────────────────
+
+Security Score | Vault
+
+Locked Apps    | Alerts
+
+──────────────────────────
+
+
+---
+
+Foldable Behavior
+
+Adapt:
+
+grids
+
+navigation spacing
+
+card width
+
+
+
+---
+
+22. FIGMA ORGANIZATION STRUCTURE
+
+Figma Pages
+
+01 Foundations
+02 Components
+03 Authentication
+04 Dashboard
+05 Vault
+06 Security Center
+07 Settings
+08 Stealth
+09 Responsive
+10 Prototypes
+
+
+---
+
+Components Page
+
+Include:
+
+buttons
+
+cards
+
+toggles
+
+nav bars
+
+dialogs
+
+lock keypad
+
+
+
+---
+
+Prototype Page
+
+Include:
+
+navigation flows
+
+overlay animations
+
+onboarding walkthroughs
+
+recovery flows
+
+
+
+---
+
+23. PROTOTYPE INTERACTION EXAMPLES
+
+App Lock Flow
+
+Dashboard
+↓
+Lock Apps
+↓
+Enable WhatsApp
+↓
+Return To Dashboard
+↓
+Open WhatsApp
+↓
+Overlay Appears
+↓
+Fingerprint Unlock
+
+
+---
+
+Vault Flow
+
+Vault
+↓
+Import Photo
+↓
+Encryption Animation
+↓
+Photo Added To Grid
+
+
+---
+
+Recovery Flow
+
+Accessibility Disabled
+↓
+Dashboard Warning Appears
+↓
+Fix Button Opens Settings
+
+
+---
+
+24. FINAL WIREFRAME PRINCIPLE
+
+Your wireframes should feel like:
+
+A premium Android privacy operating layer
+
+NOT:
+
+A generic Play Store utility app
+
+I’ve created the complete FIGMA / WIREFRAMES specification document with:
+
+full screen wireframes
+
+onboarding layouts
+
+dashboard layouts
+
+vault flows
+
+overlay lock screens
+
+security center
+
+settings
+
+stealth mode
+
+tablet/foldable layouts
+
+interaction examples
+
+prototype flows
+
+Figma organization structure
+
+
+It’s now structured like a real production design blueprint rather than just random mockups.

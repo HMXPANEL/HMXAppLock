@@ -1,0 +1,798 @@
+TRD — Technical Requirements Document
+
+Advanced Android App Lock
+Privacy-First Local-Only Architecture
+Version 2.0
+
+
+---
+
+1. Technical Overview
+
+Product Type
+
+Native Android privacy and security application.
+
+Core Philosophy
+
+Everything stays on the user's device.
+No cloud dependency.
+No user accounts.
+No remote storage.
+No tracking-based analytics.
+No external data syncing.
+
+
+---
+
+2. Technical Objectives
+
+Primary Goals
+
+fast app lock detection
+
+smooth lock overlay
+
+encrypted local storage
+
+premium UI performance
+
+low battery usage
+
+privacy-first architecture
+
+fully offline functionality
+
+
+
+---
+
+3. Technology Stack
+
+Frontend
+
+Technology	Purpose
+
+Kotlin	Main language
+Jetpack Compose	UI framework
+Material 3	Design system
+Compose Navigation	Navigation
+Lottie	Animations
+Coil	Image loading
+
+
+
+---
+
+Architecture
+
+Technology	Purpose
+
+MVVM	UI architecture
+Clean Architecture	scalability
+Hilt	dependency injection
+Coroutines	async processing
+Kotlin Flow	reactive state
+
+
+
+---
+
+Storage
+
+Technology	Purpose
+
+Room Database	local database
+DataStore	preferences
+Android Keystore	encryption keys
+EncryptedSharedPreferences	secure preferences
+AES Encryption	vault encryption
+
+
+
+---
+
+Security APIs
+
+API	Purpose
+
+BiometricPrompt	fingerprint unlock
+AccessibilityService	app monitoring
+UsageStatsManager	fallback monitoring
+WindowManager Overlay	lock overlay
+DevicePolicyManager	optional device admin
+
+
+
+---
+
+Media & Vault
+
+Technology	Purpose
+
+MediaStore	media access
+ExoPlayer	video playback
+Local Encryption Engine	secure file storage
+
+
+
+---
+
+4. Privacy Architecture
+
+Core Privacy Principles
+
+Local-Only Data Storage
+
+All sensitive data remains only on the user's device.
+
+
+---
+
+No Cloud Infrastructure
+
+The app will NOT use:
+
+cloud databases
+
+remote storage
+
+cloud backup
+
+account systems
+
+sync servers
+
+
+
+---
+
+No Analytics Tracking
+
+The app will NOT use:
+
+Firebase Analytics
+
+user telemetry
+
+behavior tracking
+
+advertising SDKs
+
+
+
+---
+
+Optional Crash Reporting
+
+Default State
+
+Disabled.
+
+User Choice
+
+User may manually:
+
+export logs
+
+share crash reports
+
+
+No automatic uploads.
+
+
+---
+
+5. System Architecture
+
+High-Level Architecture
+
+Presentation Layer
+│
+├── Compose UI
+├── ViewModels
+├── Navigation
+│
+Domain Layer
+│
+├── Security Use Cases
+├── Validation Logic
+├── Vault Logic
+│
+Data Layer
+│
+├── Room Database
+├── Encrypted Storage
+├── DataStore
+├── Local Repositories
+│
+System Layer
+│
+├── Accessibility Service
+├── Overlay Service
+├── Biometric Service
+├── Notification Service
+
+
+---
+
+6. Application Modules
+
+Core Modules
+
+app/
+core/
+theme/
+navigation/
+security/
+vault/
+intruder/
+dashboard/
+settings/
+permissions/
+
+
+---
+
+Module Responsibilities
+
+Module	Responsibility
+
+core	utilities & helpers
+security	app lock engine
+vault	encrypted file vault
+intruder	failed unlock tracking
+dashboard	home dashboard
+settings	preferences
+theme	UI system
+
+
+
+---
+
+7. UI Architecture
+
+Compose Strategy
+
+State Management
+
+Use:
+
+immutable UI states
+
+StateFlow
+
+ViewModel-driven state
+
+
+
+---
+
+Navigation Strategy
+
+Use:
+
+single activity architecture
+
+Compose Navigation
+
+nested graphs
+
+
+
+---
+
+8. Security Architecture
+
+Authentication System
+
+Supported Lock Methods
+
+PIN
+
+Pattern
+
+Password
+
+Fingerprint
+
+
+
+---
+
+Sensitive Data Protection
+
+Stored Securely
+
+lock credentials
+
+vault encryption keys
+
+user settings
+
+temporary sessions
+
+
+
+---
+
+Encryption System
+
+Use:
+
+Android Keystore
+
+AES encryption
+
+encrypted preferences
+
+
+
+---
+
+Screenshot Protection
+
+Use:
+
+FLAG_SECURE
+
+to:
+
+block screenshots
+
+block screen recording
+
+
+
+---
+
+9. App Lock Engine
+
+Detection Flow
+
+Foreground App Detection
+↓
+Check Protected Apps
+↓
+Trigger Overlay
+↓
+Authenticate User
+↓
+Unlock Session
+↓
+Relock Based On Policy
+
+
+---
+
+Foreground Detection Strategy
+
+Primary
+
+AccessibilityService
+
+Secondary
+
+UsageStatsManager fallback
+
+
+---
+
+Relock Policies
+
+Policy	Description
+
+instant	immediate relock
+screen_off	relock after screen off
+timeout	relock after delay
+
+
+
+---
+
+10. Background Services
+
+Required Services
+
+Service	Purpose
+
+AppMonitorService	monitor active apps
+OverlayService	render lock screen
+IntruderService	failed attempt tracking
+NotificationService	security alerts
+
+
+
+---
+
+Service Optimization
+
+Goals
+
+minimal wake locks
+
+low battery drain
+
+stable background execution
+
+
+
+---
+
+11. Database Architecture
+
+Room Database Tables
+
+LockedApps
+
+id
+packageName
+appName
+lockType
+relockPolicy
+isEnabled
+
+
+---
+
+VaultFiles
+
+id
+encryptedPath
+fileType
+thumbnailPath
+size
+createdAt
+
+
+---
+
+IntruderLogs
+
+id
+imagePath
+timestamp
+failedAttempts
+packageName
+batteryPercent
+
+
+---
+
+SecuritySettings
+
+id
+theme
+stealthMode
+fakePinEnabled
+intruderDetectionEnabled
+
+
+---
+
+12. Vault Architecture
+
+Local Encryption Workflow
+
+Import File
+↓
+Encrypt File
+↓
+Store Locally
+↓
+Generate Secure Thumbnail
+↓
+Hide Original File
+
+
+---
+
+Vault Requirements
+
+Supported Files
+
+photos
+
+videos
+
+documents
+
+audio
+
+
+
+---
+
+Storage Rules
+
+All Vault Data
+
+Stored:
+
+locally
+
+encrypted
+
+offline only
+
+
+Never uploaded anywhere.
+
+
+---
+
+13. Intruder Detection System
+
+Trigger Logic
+
+Failed Unlock Attempt
+↓
+Threshold Reached
+↓
+Capture Selfie
+↓
+Store Image Locally
+↓
+Save Metadata
+↓
+Notify User
+
+
+---
+
+Stored Metadata
+
+Stored locally only:
+
+timestamp
+
+app name
+
+intruder image
+
+battery %
+
+unlock attempts
+
+
+
+---
+
+14. Permission Architecture
+
+Required Permissions
+
+Permission	Purpose
+
+PACKAGE_USAGE_STATS	app monitoring
+SYSTEM_ALERT_WINDOW	lock overlay
+CAMERA	intruder selfies
+QUERY_ALL_PACKAGES	installed apps
+USE_BIOMETRIC	fingerprint unlock
+RECEIVE_BOOT_COMPLETED	auto restart
+
+
+
+---
+
+Permission Flow Strategy
+
+Permissions requested progressively.
+
+Never request all permissions simultaneously.
+
+
+---
+
+Onboarding Flow
+
+Welcome
+↓
+Usage Access
+↓
+Accessibility Setup
+↓
+Overlay Permission
+↓
+Fingerprint Setup
+↓
+Dashboard
+
+
+---
+
+15. Performance Requirements
+
+Performance Targets
+
+Metric	Goal
+
+unlock latency	<300ms
+UI frame rate	60fps
+startup time	<2s
+battery impact	low
+
+
+
+---
+
+Optimization Strategies
+
+UI
+
+lazy loading
+
+recomposition reduction
+
+image caching
+
+
+Services
+
+lifecycle-aware monitoring
+
+event-based detection
+
+
+
+---
+
+16. Error Handling
+
+Failure Handling
+
+Scenario	Response
+
+overlay denied	guide user
+biometric failed	fallback PIN
+accessibility disabled	security warning
+service killed	auto restart
+
+
+
+---
+
+17. OEM Compatibility
+
+High-Risk OEMs
+
+OEM	Risk
+
+Xiaomi	aggressive battery kill
+Oppo	background restrictions
+Vivo	service shutdown
+Huawei	permission conflicts
+
+
+
+---
+
+OEM Handling
+
+Provide:
+
+setup tutorials
+
+battery optimization guides
+
+permission recovery flows
+
+
+
+---
+
+18. Testing Strategy
+
+Testing Layers
+
+Type	Purpose
+
+Unit Tests	business logic
+UI Tests	Compose screens
+Integration Tests	services
+Manual Tests	overlay reliability
+
+
+
+---
+
+Devices To Test
+
+Samsung
+
+Xiaomi
+
+Oppo
+
+Vivo
+
+Pixel
+
+foldables
+
+tablets
+
+
+
+---
+
+19. Deployment Strategy
+
+Build Types
+
+Build	Purpose
+
+Debug	development
+Beta	testing
+Release	production
+
+
+
+---
+
+Distribution
+
+Google Play Store
+
+direct APK distribution
+
+
+
+---
+
+20. Future Technical Roadmap
+
+Phase 2
+
+- advanced stealth mode
+- decoy vault
+- fake calculator mode
+- advanced lock rules
+- battery optimization
+- OEM compatibility improvements
+
+
+---
+
+Phase 3
+
+- local encrypted backup export
+- advanced automation rules
+- modular plugin support
+- advanced vault features
+
+
+---
+
+21. Technical Risks
+
+Major Risks
+
+Risk	Impact
+
+Android restrictions	overlay instability
+OEM battery killing	service shutdown
+permission revocation	protection failure
+accessibility disable	lock bypass risk
+
+
+
+---
+
+22. Technical Success Criteria
+
+The app is considered successful when:
+
+overlays launch reliably
+
+UI remains smooth
+
+battery usage stays low
+
+vault remains encrypted
+
+no sensitive data leaves device
+
+app functions fully offline
+
+unlock delay remains minimal

@@ -1,0 +1,596 @@
+PRD — Advanced Android App Lock
+
+Version 1.0
+
+
+---
+
+1. Product Overview
+
+Product Name
+
+HMX Shield (working name)
+
+Category
+
+Android Privacy & Security Application
+
+Platform
+
+Android
+
+Tech Stack
+
+Kotlin
+
+Jetpack Compose
+
+Material 3
+
+MVVM Architecture
+
+
+
+---
+
+2. Product Vision
+
+Build a premium Android privacy platform that combines:
+
+app locking
+
+encrypted vault storage
+
+intruder detection
+
+stealth privacy tools
+
+modern UI/UX
+
+
+into one fast, secure, and visually polished experience.
+
+The product should feel like a premium system-level security suite rather than a basic utility app.
+
+
+---
+
+3. Problem Statement
+
+Most Android app lock apps suffer from:
+
+outdated UI
+
+aggressive ads
+
+poor performance
+
+weak security
+
+delayed overlays
+
+battery drain
+
+inconsistent UX
+
+lack of trust
+
+
+Users want:
+
+reliable app protection
+
+premium experience
+
+privacy-focused design
+
+modern Android UI
+
+fast unlock flow
+
+minimal battery usage
+
+
+
+---
+
+4. Target Users
+
+Primary Users
+
+privacy-focused Android users
+
+students
+
+creators
+
+professionals
+
+users protecting social/media apps
+
+
+Secondary Users
+
+parents
+
+shared-device users
+
+users hiding private files/apps
+
+
+
+---
+
+5. Product Goals
+
+Main Goals
+
+create premium app lock experience
+
+deliver smooth UI/UX
+
+reduce overlay delay
+
+provide reliable privacy tools
+
+maintain low battery usage
+
+
+Business Goals
+
+high user retention
+
+premium subscription conversion
+
+strong brand trust
+
+scalable architecture
+
+
+
+---
+
+6. Core Features (MVP)
+
+6.1 App Lock
+
+Features
+
+lock any installed app
+
+PIN/password/pattern protection
+
+fingerprint unlock
+
+relock timer
+
+instant relock option
+
+
+Requirements
+
+fast overlay launch
+
+stable detection
+
+minimal unlock delay
+
+
+
+---
+
+6.2 Lock Screen System
+
+Lock Types
+
+PIN
+
+Pattern
+
+Password
+
+Fingerprint
+
+
+UI Goals
+
+smooth animations
+
+responsive keypad
+
+AMOLED dark mode
+
+blur/glass effects
+
+
+
+---
+
+6.3 Intruder Detection
+
+Features
+
+capture intruder selfie
+
+failed unlock tracking
+
+timestamp logging
+
+device info capture
+
+
+Optional
+
+location logging
+
+front flash trigger
+
+
+
+---
+
+6.4 Security Dashboard
+
+Dashboard Sections
+
+locked apps
+
+recent unlock attempts
+
+intruder alerts
+
+security score
+
+quick settings
+
+
+UX Goals
+
+premium feel
+
+real-time updates
+
+smooth navigation
+
+
+
+---
+
+6.5 Vault System
+
+Supported Files
+
+photos
+
+videos
+
+documents
+
+audio
+
+
+Requirements
+
+encrypted local storage
+
+hidden previews
+
+fast import/export
+
+
+
+---
+
+6.6 Theme Engine
+
+Modes
+
+dark
+
+AMOLED
+
+light
+
+
+Customization
+
+accent colors
+
+dynamic gradients
+
+icon styles
+
+
+
+---
+
+7. Advanced Features (Post-MVP)
+
+Stealth Features
+
+fake calculator mode
+
+hidden launcher icon
+
+decoy unlock
+
+
+Smart Security
+
+dynamic lock rules
+
+WiFi-based unlock
+
+scheduled locking
+
+
+Cloud Features
+
+encrypted backup
+
+multi-device sync
+
+
+AI Features
+
+suspicious activity detection
+
+smart security recommendations
+
+
+
+---
+
+8. User Experience Goals
+
+The app should feel:
+
+premium
+
+modern
+
+smooth
+
+trustworthy
+
+minimal
+
+fast
+
+
+
+---
+
+9. Design Language
+
+Visual Style
+
+glassmorphism
+
+neon gradients
+
+Android 14 inspired
+
+rounded cards
+
+soft shadows
+
+smooth transitions
+
+
+Inspirations
+
+Nothing OS
+
+Proton apps
+
+Bitwarden
+
+Arc Browser
+
+Samsung OneUI
+
+
+
+---
+
+10. Security Philosophy
+
+Principles
+
+privacy-first
+
+local-first storage
+
+encrypted sensitive data
+
+minimal telemetry
+
+no selling user data
+
+
+Security Requirements
+
+Android Keystore usage
+
+encrypted preferences
+
+screenshot blocking
+
+tamper detection
+
+
+
+---
+
+11. Functional Requirements
+
+Permissions Required
+
+Accessibility Service
+
+Usage Access
+
+Overlay Permission
+
+Notification Access
+
+Camera Permission
+
+Storage Access
+
+
+
+---
+
+Core Functional Logic
+
+When a protected app launches:
+
+1. detect foreground app
+
+
+2. trigger lock overlay
+
+
+3. authenticate user
+
+
+4. unlock temporarily
+
+
+5. relock based on policy
+
+
+
+
+---
+
+12. Non-Functional Requirements
+
+Performance
+
+low battery usage
+
+fast overlay rendering
+
+low memory footprint
+
+
+Stability
+
+crash-free experience
+
+background reliability
+
+smooth animations
+
+
+Compatibility
+
+Android 10+
+
+foldable support
+
+tablet support
+
+
+
+---
+
+13. Monetization Plan
+
+Free Tier
+
+basic app lock
+
+limited vault
+
+limited themes
+
+
+Premium Tier
+
+unlimited vault
+
+advanced stealth tools
+
+cloud backup
+
+premium themes
+
+advanced intruder analytics
+
+
+
+---
+
+14. Success Metrics
+
+Technical Metrics
+
+unlock latency <300ms
+
+crash-free rate >99%
+
+low ANR rate
+
+
+Product Metrics
+
+daily active users
+
+retention rate
+
+premium conversion
+
+session duration
+
+
+
+---
+
+15. Risks & Challenges
+
+Android Restrictions
+
+OEM battery killing
+
+overlay restrictions
+
+accessibility limitations
+
+
+Security Risks
+
+bypass attempts
+
+permission revocation
+
+uninstall bypasses
+
+
+
+---
+
+16. Future Vision
+
+Transform the app from:
+
+simple app locker
+
+into:
+
+complete Android privacy ecosystem
+
+including:
+
+secure vault
+
+privacy dashboard
+
+device protection
+
+stealth security
+
+intelligent privacy automation

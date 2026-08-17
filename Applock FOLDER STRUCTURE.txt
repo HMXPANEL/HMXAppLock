@@ -1,0 +1,838 @@
+FOLDER STRUCTURE — Advanced Android App Lock
+
+Version 1.0
+
+This document defines:
+
+project structure
+
+module organization
+
+package hierarchy
+
+feature separation
+
+scalable architecture layout
+
+
+Goal:
+
+clean
+scalable
+modular
+AI-friendly
+maintainable
+
+Important principle:
+
+structure by feature
+NOT by file type only
+
+Bad structure becomes:
+
+impossible to scale
+
+difficult for AI coding tools
+
+full of duplicated logic
+
+hard to debug
+
+
+
+---
+
+1. PROJECT STRUCTURE PHILOSOPHY
+
+Core Principles
+
+Feature-Based Architecture
+
+Each feature owns:
+
+UI
+
+ViewModel
+
+domain logic
+
+repository
+
+database
+
+navigation
+
+
+
+---
+
+Benefits
+
+Feature-based structure:
+
+scales better
+
+improves maintainability
+
+improves AI code generation
+
+reduces coupling
+
+
+
+---
+
+Avoid
+
+Bad structure like:
+
+activities/
+fragments/
+adapters/
+models/
+utils/
+
+That becomes chaos in large projects.
+
+
+---
+
+2. ROOT PROJECT STRUCTURE
+
+Root Layout
+
+app/
+buildSrc/
+core/
+features/
+system/
+
+
+---
+
+Explanation
+
+Folder	Purpose
+
+app	application entry
+buildSrc	dependency management
+core	shared architecture
+features	app features
+system	Android system integrations
+
+
+
+---
+
+3. APP MODULE
+
+Purpose
+
+Main application module.
+
+
+---
+
+Structure
+
+app/
+├── App.kt
+├── MainActivity.kt
+├── navigation/
+├── di/
+
+
+---
+
+Responsibilities
+
+Handles:
+
+app startup
+
+Hilt initialization
+
+root navigation
+
+global theme setup
+
+
+
+---
+
+Example
+
+App Launch
+↓
+Hilt Injected
+↓
+Navigation Initialized
+↓
+Dashboard Loaded
+
+
+---
+
+4. CORE MODULE
+
+Purpose
+
+Shared reusable infrastructure.
+
+
+---
+
+Structure
+
+core/
+├── ui/
+├── theme/
+├── components/
+├── animations/
+├── utils/
+├── security/
+├── datastore/
+├── database/
+├── common/
+
+
+---
+
+Responsibilities
+
+Contains:
+
+reusable Compose components
+
+shared utilities
+
+design system
+
+encryption helpers
+
+database setup
+
+
+
+---
+
+Example
+
+GlowButton used by:
+Dashboard
+Vault
+Settings
+Lock Screen
+
+
+---
+
+5. FEATURES MODULE
+
+Purpose
+
+Contains all business features.
+
+
+---
+
+Structure
+
+features/
+├── dashboard/
+├── applock/
+├── vault/
+├── intruder/
+├── securitycenter/
+├── stealth/
+├── themes/
+├── settings/
+├── onboarding/
+├── authentication/
+
+
+---
+
+Rule
+
+Each feature is:
+
+self-contained
+
+
+---
+
+6. FEATURE STRUCTURE TEMPLATE
+
+Standard Feature Layout
+
+Example:
+
+features/applock/
+├── data/
+├── domain/
+├── presentation/
+├── navigation/
+├── di/
+
+
+---
+
+Why This Matters
+
+Keeps:
+
+logic isolated
+
+testing easier
+
+AI code generation predictable
+
+
+
+---
+
+7. DATA LAYER STRUCTURE
+
+Purpose
+
+Handles:
+
+repositories
+
+Room
+
+local storage
+
+encryption
+
+
+
+---
+
+Structure
+
+data/
+├── dao/
+├── entities/
+├── repository/
+├── datasource/
+├── mapper/
+
+
+---
+
+Example
+
+vault/data/
+├── dao/VaultDao.kt
+├── entities/VaultFileEntity.kt
+├── repository/VaultRepositoryImpl.kt
+
+
+---
+
+Example Flow
+
+ViewModel
+↓
+UseCase
+↓
+Repository
+↓
+DAO
+↓
+Room Database
+
+
+---
+
+8. DOMAIN LAYER STRUCTURE
+
+Purpose
+
+Contains:
+
+business logic
+
+validation
+
+use cases
+
+
+
+---
+
+Structure
+
+domain/
+├── model/
+├── usecase/
+├── validator/
+├── manager/
+
+
+---
+
+Example
+
+applock/domain/
+├── usecase/LockAppUseCase.kt
+├── validator/PinValidator.kt
+
+
+---
+
+Domain Rules
+
+Domain layer:
+
+no Compose imports
+
+no Android UI logic
+
+pure business logic only
+
+
+
+---
+
+9. PRESENTATION LAYER STRUCTURE
+
+Purpose
+
+Handles:
+
+Compose UI
+
+state rendering
+
+user interaction
+
+
+
+---
+
+Structure
+
+presentation/
+├── screen/
+├── component/
+├── state/
+├── event/
+├── viewmodel/
+
+
+---
+
+Example
+
+vault/presentation/
+├── screen/VaultScreen.kt
+├── component/VaultGrid.kt
+├── viewmodel/VaultViewModel.kt
+
+
+---
+
+Example Flow
+
+User Clicks Import
+↓
+UI Event
+↓
+ViewModel
+↓
+UseCase
+↓
+Repository
+
+
+---
+
+10. NAVIGATION STRUCTURE
+
+Purpose
+
+Feature-specific navigation.
+
+
+---
+
+Structure
+
+navigation/
+├── AppNavGraph.kt
+├── DashboardNav.kt
+├── VaultNav.kt
+
+
+---
+
+Navigation Graphs
+
+Use:
+
+nested navigation graphs
+
+
+---
+
+Example
+
+Main Graph
+├── Dashboard Graph
+├── Vault Graph
+├── Settings Graph
+
+
+---
+
+11. DI STRUCTURE
+
+Purpose
+
+Dependency injection.
+
+
+---
+
+Structure
+
+di/
+├── DatabaseModule.kt
+├── RepositoryModule.kt
+├── SecurityModule.kt
+
+
+---
+
+Example
+
+Hilt provides:
+- repositories
+- DAOs
+- encryption manager
+- use cases
+
+
+---
+
+12. SYSTEM MODULE
+
+Purpose
+
+Android system integrations.
+
+
+---
+
+Structure
+
+system/
+├── accessibility/
+├── overlay/
+├── biometric/
+├── monitoring/
+├── notification/
+├── boot/
+
+
+---
+
+Example
+
+system/overlay/
+├── OverlayService.kt
+├── OverlayManager.kt
+
+
+---
+
+Responsibilities
+
+Handles:
+
+overlays
+
+accessibility monitoring
+
+boot restoration
+
+biometric integration
+
+
+
+---
+
+13. UI COMPONENT STRUCTURE
+
+Purpose
+
+Reusable Compose UI system.
+
+
+---
+
+Structure
+
+core/ui/components/
+├── button/
+├── card/
+├── toggle/
+├── navigation/
+├── loading/
+├── dialog/
+
+
+---
+
+Example
+
+components/button/
+├── GlowButton.kt
+├── IconButton.kt
+
+
+---
+
+Example Usage
+
+GlowButton used across:
+Dashboard
+Settings
+Vault
+Lock Screen
+
+
+---
+
+14. THEME STRUCTURE
+
+Purpose
+
+Centralized UI styling.
+
+
+---
+
+Structure
+
+core/theme/
+├── Color.kt
+├── Typography.kt
+├── Shape.kt
+├── Theme.kt
+
+
+---
+
+Example
+
+Change Accent Color
+↓
+Theme State Updates
+↓
+Entire App Re-composes
+
+
+---
+
+15. DATABASE STRUCTURE
+
+Purpose
+
+Central Room setup.
+
+
+---
+
+Structure
+
+core/database/
+├── AppDatabase.kt
+├── converters/
+├── migrations/
+
+
+---
+
+Example
+
+Migration v1 → v2
+↓
+Add StealthConfig table
+
+
+---
+
+16. SECURITY STRUCTURE
+
+Purpose
+
+Central security helpers.
+
+
+---
+
+Structure
+
+core/security/
+├── encryption/
+├── hashing/
+├── integrity/
+├── session/
+
+
+---
+
+Example
+
+Encrypt Vault File
+↓
+EncryptionManager
+↓
+AES + Keystore
+
+
+---
+
+17. UTILITIES STRUCTURE
+
+Purpose
+
+Shared helpers.
+
+
+---
+
+Structure
+
+core/utils/
+├── extension/
+├── formatter/
+├── logger/
+├── helper/
+
+
+---
+
+Important Rule
+
+Utilities should:
+
+remain small
+
+Avoid:
+
+God utility classes
+
+
+---
+
+18. TEST STRUCTURE
+
+Purpose
+
+Testing organization.
+
+
+---
+
+Structure
+
+test/
+├── unit/
+├── integration/
+├── ui/
+
+
+---
+
+Example
+
+unit/
+├── PinValidatorTest.kt
+
+
+---
+
+19. AI CODING OPTIMIZATION
+
+Why Structure Matters For AI
+
+AI tools perform MUCH better when:
+
+folder boundaries are clear
+
+responsibilities are isolated
+
+naming is predictable
+
+
+
+---
+
+Example
+
+Bad:
+
+utils.kt
+helpers.kt
+misc.kt
+
+Good:
+
+vault/domain/usecase/
+
+
+---
+
+20. FINAL PROJECT STRUCTURE
+
+Full Structure Overview
+
+app/
+core/
+│
+├── ui/
+├── theme/
+├── database/
+├── datastore/
+├── security/
+├── utils/
+│
+features/
+│
+├── onboarding/
+├── authentication/
+├── dashboard/
+├── applock/
+├── vault/
+├── intruder/
+├── securitycenter/
+├── stealth/
+├── themes/
+├── settings/
+│
+system/
+│
+├── accessibility/
+├── overlay/
+├── biometric/
+├── monitoring/
+├── notification/
+├── boot/
+
+
+---
+
+21. FINAL STRUCTURE PRINCIPLE
+
+Your project should feel like:
+
+a modular Android security platform
+
+NOT:
+
+a random collection of Kotlin files

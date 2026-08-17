@@ -1,0 +1,820 @@
+DATABASE SCHEMA — Advanced Android App Lock
+
+Version 1.0
+Local-Only Privacy Architecture
+
+This document defines:
+
+Room database structure
+
+entities
+
+relationships
+
+indexes
+
+encryption handling
+
+DAO responsibilities
+
+local storage strategy
+
+
+Goal:
+
+secure
+fast
+scalable
+offline-first
+maintainable
+
+Important:
+
+All data stays only on the user's device.
+No cloud database.
+No remote sync.
+No external storage dependency.
+
+
+---
+
+1. DATABASE OVERVIEW
+
+Database Engine
+
+Use:
+
+Room Database
+
+built on:
+
+SQLite
+
+
+---
+
+Why Room?
+
+Benefits:
+
+type safety
+
+compile-time query validation
+
+coroutine support
+
+Flow integration
+
+migration support
+
+
+
+---
+
+Database Name
+
+hmx_shield_db
+
+
+---
+
+Database Versioning
+
+Use:
+
+semantic migration strategy
+
+Example:
+
+v1 → initial release
+v2 → decoy vault support
+v3 → automation rules
+
+
+---
+
+2. DATABASE ARCHITECTURE
+
+Core Tables
+
+LockedApps
+UnlockSessions
+VaultFiles
+VaultFolders
+IntruderLogs
+SecuritySettings
+ThemeSettings
+PermissionStates
+RecoveryData
+StealthConfigs
+
+
+---
+
+Relationships Overview
+
+LockedApps
+    ↓
+UnlockSessions
+
+VaultFolders
+    ↓
+VaultFiles
+
+
+---
+
+3. LOCKED APPS TABLE
+
+Purpose
+
+Stores:
+
+protected apps
+
+lock rules
+
+relock policies
+
+protection settings
+
+
+
+---
+
+Entity
+
+@Entity(
+    tableName = "locked_apps",
+    indices = [
+        Index(value = ["packageName"], unique = true)
+    ]
+)
+data class LockedAppEntity(
+
+    @PrimaryKey(autoGenerate = true)
+    val id: Int = 0,
+
+    val packageName: String,
+
+    val appName: String,
+
+    val lockType: String,
+
+    val relockPolicy: String,
+
+    val isEnabled: Boolean,
+
+    val createdAt: Long
+)
+
+
+---
+
+Example Data
+
+packageName	lockType	relockPolicy
+
+com.whatsapp	PIN	instant
+org.telegram	fingerprint	screen_off
+
+
+
+---
+
+Example Flow
+
+User Locks WhatsApp
+↓
+Insert Into locked_apps
+↓
+Foreground Detection Checks Table
+↓
+Overlay Triggered
+
+
+---
+
+4. UNLOCK SESSIONS TABLE
+
+Purpose
+
+Tracks temporary unlock states.
+
+
+---
+
+Why Needed?
+
+Without sessions: user would re-enter PIN constantly.
+
+
+---
+
+Entity
+
+@Entity(tableName = "unlock_sessions")
+data class UnlockSessionEntity(
+
+    @PrimaryKey(autoGenerate = true)
+    val id: Int = 0,
+
+    val packageName: String,
+
+    val unlockedAt: Long,
+
+    val expiresAt: Long
+)
+
+
+---
+
+Example
+
+User Unlocks Instagram
+↓
+Session Created
+↓
+Expires In 5 Minutes
+↓
+No Re-auth Needed
+
+
+---
+
+5. VAULT FILES TABLE
+
+Purpose
+
+Stores encrypted vault metadata.
+
+Important:
+
+actual encrypted files are NOT stored in database
+
+Only metadata is stored.
+
+
+---
+
+Entity
+
+@Entity(tableName = "vault_files")
+data class VaultFileEntity(
+
+    @PrimaryKey(autoGenerate = true)
+    val id: Int = 0,
+
+    val encryptedPath: String,
+
+    val originalName: String,
+
+    val fileType: String,
+
+    val thumbnailPath: String?,
+
+    val folderId: Int?,
+
+    val size: Long,
+
+    val createdAt: Long
+)
+
+
+---
+
+Example Flow
+
+Import Photo
+↓
+Encrypt Photo
+↓
+Save Encrypted File Locally
+↓
+Store Metadata In vault_files
+
+
+---
+
+Example Metadata
+
+originalName	fileType	encryptedPath
+
+photo.jpg	image	/vault/a92x.enc
+
+
+
+---
+
+6. VAULT FOLDERS TABLE
+
+Purpose
+
+Organize vault content.
+
+
+---
+
+Entity
+
+@Entity(tableName = "vault_folders")
+data class VaultFolderEntity(
+
+    @PrimaryKey(autoGenerate = true)
+    val id: Int = 0,
+
+    val folderName: String,
+
+    val createdAt: Long
+)
+
+
+---
+
+Example
+
+Folders:
+
+Private
+Work
+Documents
+Hidden
+
+
+---
+
+7. INTRUDER LOGS TABLE
+
+Purpose
+
+Stores failed unlock attempts.
+
+
+---
+
+Entity
+
+@Entity(tableName = "intruder_logs")
+data class IntruderLogEntity(
+
+    @PrimaryKey(autoGenerate = true)
+    val id: Int = 0,
+
+    val imagePath: String,
+
+    val packageName: String,
+
+    val failedAttempts: Int,
+
+    val batteryPercent: Int,
+
+    val timestamp: Long
+)
+
+
+---
+
+Example Flow
+
+Wrong PIN Multiple Times
+↓
+Capture Selfie
+↓
+Save Image Locally
+↓
+Store Metadata In intruder_logs
+
+
+---
+
+8. SECURITY SETTINGS TABLE
+
+Purpose
+
+Stores global security behavior.
+
+
+---
+
+Entity
+
+@Entity(tableName = "security_settings")
+data class SecuritySettingsEntity(
+
+    @PrimaryKey
+    val id: Int = 1,
+
+    val stealthMode: Boolean,
+
+    val intruderDetectionEnabled: Boolean,
+
+    val screenshotProtectionEnabled: Boolean,
+
+    val biometricEnabled: Boolean
+)
+
+
+---
+
+Example
+
+Enable Stealth Mode
+↓
+Update security_settings
+↓
+Launcher Icon Hidden
+
+
+---
+
+9. THEME SETTINGS TABLE
+
+Purpose
+
+Stores UI customization.
+
+
+---
+
+Entity
+
+@Entity(tableName = "theme_settings")
+data class ThemeSettingsEntity(
+
+    @PrimaryKey
+    val id: Int = 1,
+
+    val themeMode: String,
+
+    val accentColor: String,
+
+    val blurEnabled: Boolean,
+
+    val animationEnabled: Boolean
+)
+
+
+---
+
+Example
+
+User Chooses AMOLED Theme
+↓
+theme_settings Updated
+↓
+Compose Recomposition Triggered
+
+
+---
+
+10. PERMISSION STATES TABLE
+
+Purpose
+
+Tracks critical permissions.
+
+
+---
+
+Why Needed?
+
+Android OEMs may revoke permissions silently.
+
+Need monitoring.
+
+
+---
+
+Entity
+
+@Entity(tableName = "permission_states")
+data class PermissionStateEntity(
+
+    @PrimaryKey(autoGenerate = true)
+    val id: Int = 0,
+
+    val permissionName: String,
+
+    val granted: Boolean,
+
+    val lastChecked: Long
+)
+
+
+---
+
+Example Flow
+
+Accessibility Revoked
+↓
+permission_states Updated
+↓
+Security Warning Shown
+
+
+---
+
+11. RECOVERY DATA TABLE
+
+Purpose
+
+Stores local recovery information.
+
+
+---
+
+Entity
+
+@Entity(tableName = "recovery_data")
+data class RecoveryDataEntity(
+
+    @PrimaryKey
+    val id: Int = 1,
+
+    val recoveryQuestion: String,
+
+    val encryptedRecoveryAnswer: String
+)
+
+
+---
+
+Important
+
+Recovery answer:
+
+encrypted before storage
+
+
+---
+
+12. STEALTH CONFIG TABLE
+
+Purpose
+
+Stores hidden mode behavior.
+
+
+---
+
+Entity
+
+@Entity(tableName = "stealth_configs")
+data class StealthConfigEntity(
+
+    @PrimaryKey
+    val id: Int = 1,
+
+    val calculatorModeEnabled: Boolean,
+
+    val hiddenLauncherEnabled: Boolean,
+
+    val fakeCrashEnabled: Boolean
+)
+
+
+---
+
+Example
+
+Enable Calculator Mode
+↓
+Update stealth_configs
+↓
+Launcher Alias Switched
+
+
+---
+
+13. DAO ARCHITECTURE
+
+DAO Structure
+
+Each module owns:
+
+entity
+
+DAO
+
+repository
+
+
+
+---
+
+Example
+
+vault/
+├── VaultFileEntity
+├── VaultDao
+├── VaultRepository
+
+
+---
+
+Example DAO
+
+@Dao
+interface LockedAppsDao {
+
+    @Query("SELECT * FROM locked_apps")
+    fun getLockedApps(): Flow<List<LockedAppEntity>>
+
+    @Insert
+    suspend fun insertApp(app: LockedAppEntity)
+
+    @Delete
+    suspend fun deleteApp(app: LockedAppEntity)
+}
+
+
+---
+
+14. REPOSITORY ARCHITECTURE
+
+Purpose
+
+Repositories provide:
+
+single source of truth
+
+
+---
+
+Example Flow
+
+ViewModel
+↓
+UseCase
+↓
+Repository
+↓
+DAO
+↓
+Database
+
+
+---
+
+15. ENCRYPTION STRATEGY
+
+Critical Rule
+
+Database is:
+
+NOT enough security alone
+
+Sensitive data must also be encrypted.
+
+
+---
+
+Encrypt Before Storage
+
+Encrypt:
+
+PIN hashes
+
+recovery answers
+
+vault metadata
+
+secure preferences
+
+
+
+---
+
+Encryption Stack
+
+Use:
+
+Android Keystore
++
+AES
+
+
+---
+
+Example Flow
+
+User Creates PIN
+↓
+Hash PIN
+↓
+Encrypt Hash
+↓
+Store Securely
+
+
+---
+
+16. INDEXING STRATEGY
+
+Why Indexes Matter
+
+Improves:
+
+search speed
+
+app lookup speed
+
+vault loading
+
+
+
+---
+
+Indexed Fields
+
+Table	Indexed Field
+
+locked_apps	packageName
+vault_files	folderId
+intruder_logs	timestamp
+
+
+
+---
+
+17. MIGRATION STRATEGY
+
+Future-Proofing
+
+Use:
+
+Room Migration System
+
+
+---
+
+Example
+
+v1 → base schema
+v2 → add decoy vault
+v3 → add automation rules
+
+
+---
+
+18. PERFORMANCE STRATEGY
+
+Goals
+
+Database should:
+
+load quickly
+
+minimize blocking
+
+avoid UI lag
+
+
+
+---
+
+Strategies
+
+Use:
+
+Flow
+
+suspend functions
+
+background dispatchers
+
+
+Avoid:
+
+main-thread queries
+
+
+
+---
+
+19. BACKUP STRATEGY
+
+Local Backup Only
+
+Flow:
+
+Export Encrypted Database
+↓
+Save Backup Locally
+↓
+User Chooses Storage Location
+
+No cloud uploads.
+
+
+---
+
+20. FINAL DATABASE PRINCIPLE
+
+The database should behave like:
+
+a secure local operating layer
+
+NOT:
+
+a cloud-connected analytics system

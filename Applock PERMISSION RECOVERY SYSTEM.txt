@@ -1,0 +1,744 @@
+PERMISSION RECOVERY SYSTEM — Advanced Android App Lock
+
+Version 1.0
+
+This document defines:
+
+permission monitoring
+
+permission failure detection
+
+recovery flows
+
+OEM-specific recovery handling
+
+user guidance system
+
+automatic protection degradation handling
+
+
+Goal:
+
+detect failures quickly
+recover protection smoothly
+avoid silent security failure
+
+Important reality:
+
+Android permissions are NOT permanent.
+
+OEMs and users may:
+
+disable accessibility
+
+revoke overlay permission
+
+kill background services
+
+restrict battery usage
+
+disable notifications
+
+
+Your app must:
+
+continuously verify protection health
+
+instead of assuming permissions always work.
+
+
+---
+
+1. RECOVERY SYSTEM PHILOSOPHY
+
+Core Principle
+
+Never allow:
+
+silent protection failure
+
+If protection weakens:
+
+detect immediately
+
+warn clearly
+
+guide recovery
+
+reduce risk
+
+
+
+---
+
+Security Health Model
+
+Protection health should behave like:
+
+State	Meaning
+
+Healthy	full protection active
+Warning	some protection degraded
+Critical	protection unreliable
+
+
+
+---
+
+2. PERMISSIONS TO MONITOR
+
+Critical Permissions
+
+Permission	Importance
+
+Accessibility Service	CRITICAL
+Overlay Permission	CRITICAL
+Usage Access	HIGH
+Notification Permission	MEDIUM
+Biometric Availability	MEDIUM
+Battery Optimization Exemption	HIGH
+
+
+
+---
+
+Monitoring Strategy
+
+Permissions should be checked:
+
+app startup
+
+app resume
+
+periodic background checks
+
+service restart
+
+unlock failures
+
+
+
+---
+
+3. ACCESSIBILITY RECOVERY SYSTEM
+
+Why Critical?
+
+Without accessibility:
+
+foreground app monitoring fails
+
+
+---
+
+Detection Logic
+
+Continuously verify:
+
+AccessibilityService enabled state
+
+
+---
+
+Failure Flow
+
+Accessibility Disabled
+↓
+Security State Changes To Critical
+↓
+Dashboard Warning Appears
+↓
+Protection Reliability Reduced
+↓
+Recovery Guide Opens
+
+
+---
+
+Recovery Screen
+
+UI Components
+
+Header
+
+"Protection Paused"
+
+
+---
+
+Explanation
+
+Accessibility service is disabled.
+App lock protection may not work correctly.
+
+
+---
+
+Recovery Button
+
+"Enable Accessibility"
+
+
+---
+
+Recovery Example
+
+User Disables Accessibility
+↓
+App Detects Failure
+↓
+Dashboard Turns Warning Red
+↓
+Persistent Recovery Card Appears
+↓
+Tap Opens Accessibility Settings
+
+
+---
+
+4. OVERLAY PERMISSION RECOVERY
+
+Why Critical?
+
+Without overlay:
+
+lock screen cannot appear
+
+
+---
+
+Detection Logic
+
+Check:
+
+Settings.canDrawOverlays()
+
+
+---
+
+Failure Flow
+
+Overlay Permission Revoked
+↓
+Overlay Engine Disabled
+↓
+Security Warning Triggered
+↓
+Recovery Flow Started
+
+
+---
+
+Recovery UI Example
+
+"Overlay permission required
+to display secure lock screens."
+
+
+---
+
+Recovery Action
+
+Open Overlay Permission Settings
+
+
+---
+
+5. USAGE ACCESS RECOVERY
+
+Why Needed?
+
+Fallback foreground detection.
+
+
+---
+
+Threat
+
+Without usage access:
+
+secondary monitoring weakens
+
+reliability decreases
+
+
+
+---
+
+Recovery Flow
+
+Usage Access Missing
+↓
+Warning State Triggered
+↓
+User Guided To Settings
+
+
+---
+
+Severity
+
+State	Severity
+
+accessibility active	medium
+accessibility missing	critical
+
+
+
+---
+
+6. BATTERY OPTIMIZATION RECOVERY
+
+OEM Problem
+
+Many OEMs kill:
+
+monitoring services
+
+overlays
+
+background tasks
+
+
+Especially:
+
+Xiaomi
+
+Oppo
+
+Vivo
+
+
+
+---
+
+Detection Logic
+
+Check:
+
+isIgnoringBatteryOptimizations()
+
+
+---
+
+Failure Flow
+
+Battery Optimization Enabled
+↓
+Monitoring Service Killed
+↓
+Protection Interrupted
+↓
+Recovery Warning Triggered
+
+
+---
+
+Recovery UI Example
+
+"Your device may stop protection in background."
+
+
+---
+
+Recovery Actions
+
+Disable Battery Optimization
+Enable Auto Start
+Lock App In Recents
+
+
+---
+
+7. OEM RECOVERY SYSTEM
+
+Why Needed?
+
+Android behaves differently across OEMs.
+
+
+---
+
+OEM Detection
+
+Detect:
+
+Build.MANUFACTURER
+
+
+---
+
+OEM Profiles
+
+OEM	Problem
+
+Xiaomi	aggressive task killing
+Oppo	overlay interruption
+Vivo	background restrictions
+Huawei	permission resets
+
+
+
+---
+
+OEM Recovery Example
+
+Xiaomi Device Detected
+↓
+Show MIUI-specific setup guide
+↓
+Guide user to:
+- Auto Start
+- No Restrictions
+- Lock In Recents
+
+
+---
+
+8. SERVICE HEALTH RECOVERY
+
+Problem
+
+Android may kill services silently.
+
+
+---
+
+Detection Logic
+
+Track:
+
+service alive state
+
+heartbeat timestamps
+
+monitoring intervals
+
+
+
+---
+
+Failure Flow
+
+Foreground Monitor Stops
+↓
+Heartbeat Missing
+↓
+Service Restart Attempted
+↓
+User Warning If Restart Fails
+
+
+---
+
+Recovery Strategy
+
+First Attempt
+
+Automatic restart.
+
+Second Attempt
+
+Prompt user.
+
+
+---
+
+9. BIOMETRIC RECOVERY SYSTEM
+
+Threat
+
+Fingerprint may become:
+
+unavailable
+
+removed
+
+temporarily locked
+
+
+
+---
+
+Detection Flow
+
+Biometric Failure
+↓
+Fallback To PIN
+↓
+Show Warning
+
+
+---
+
+Recovery Example
+
+Fingerprint Removed From Device
+↓
+App Detects Change
+↓
+Biometric Disabled Automatically
+↓
+PIN Becomes Primary Lock
+
+
+---
+
+10. NOTIFICATION PERMISSION RECOVERY
+
+Purpose
+
+Used for:
+
+security alerts
+
+intruder notifications
+
+recovery warnings
+
+
+
+---
+
+Failure Flow
+
+Notification Permission Disabled
+↓
+Recovery Alerts Cannot Appear
+↓
+Warning Banner Shown
+
+
+---
+
+Severity
+
+Medium priority only.
+
+Core protection still works.
+
+
+---
+
+11. SECURITY HEALTH DASHBOARD
+
+Purpose
+
+Centralized recovery monitoring.
+
+
+---
+
+Dashboard Sections
+
+Accessibility Status
+Overlay Status
+Battery Optimization
+Service Health
+Biometric Status
+Notification Status
+
+
+---
+
+Status Colors
+
+State	Color
+
+Healthy	Green
+Warning	Yellow
+Critical	Red
+
+
+
+---
+
+Example
+
+Accessibility: Active
+Overlay: Active
+Battery Optimization: Warning
+
+
+---
+
+12. RECOVERY PRIORITY SYSTEM
+
+Priority Levels
+
+Level	Meaning
+
+Critical	protection broken
+High	protection degraded
+Medium	convenience reduced
+Low	optional feature affected
+
+
+
+---
+
+Example
+
+Failure	Priority
+
+Accessibility disabled	Critical
+Overlay revoked	Critical
+Notification disabled	Medium
+Biometric unavailable	Medium
+
+
+
+---
+
+13. RECOVERY UX RULES
+
+Core UX Principles
+
+Recovery UX must:
+
+feel calm
+
+explain clearly
+
+avoid fear tactics
+
+guide step-by-step
+
+
+
+---
+
+Good Example
+
+"Protection may not work correctly
+until accessibility is enabled."
+
+
+---
+
+Bad Example
+
+"YOUR DEVICE IS IN DANGER"
+
+
+---
+
+14. AUTOMATIC RECOVERY STRATEGY
+
+Goal
+
+Fix issues automatically whenever possible.
+
+
+---
+
+Auto Recovery Examples
+
+Service Restart
+
+Service Crash
+↓
+Restart Automatically
+↓
+Restore Monitoring
+
+
+---
+
+Session Cleanup
+
+Expired Sessions
+↓
+Auto Remove
+↓
+Relock Apps
+
+
+---
+
+15. RECOVERY EVENT SYSTEM
+
+Event Architecture
+
+Use:
+
+centralized recovery events
+
+
+---
+
+Example
+
+Permission Revoked
+↓
+Recovery Event Emitted
+↓
+UI Updated
+↓
+Notification Triggered
+
+
+---
+
+16. LOCAL RECOVERY LOGGING
+
+Purpose
+
+Store:
+
+permission failures
+
+service failures
+
+recovery attempts
+
+
+Locally only.
+
+
+---
+
+Example
+
+Overlay revoked at 4:32 PM
+Recovery guide shown
+User restored permission
+
+
+---
+
+17. FAIL-SAFE STRATEGY
+
+Important Principle
+
+If protection becomes unreliable: the app must:
+
+warn honestly
+
+Never pretend protection still works.
+
+
+---
+
+Example
+
+Accessibility disabled
+↓
+Security score drops
+↓
+Critical warning displayed
+↓
+Protection marked degraded
+
+
+---
+
+18. FINAL RECOVERY PRINCIPLE
+
+The recovery system should behave like:
+
+a self-monitoring Android security layer
+
+NOT:
+
+a passive app that silently breaks

@@ -1,0 +1,732 @@
+APP FLOW — Advanced Android App Lock
+
+Version 1.0
+
+This document defines:
+
+screen structure
+
+navigation flow
+
+permission flow
+
+security flow
+
+vault flow
+
+onboarding logic
+
+user movement across the app
+
+
+The goal is:
+
+simple navigation
+fast interaction
+minimal confusion
+premium UX
+
+
+---
+
+1. Global Navigation Structure
+
+Splash
+↓
+Welcome
+↓
+Onboarding
+↓
+Permission Setup
+↓
+Lock Creation
+↓
+Dashboard
+
+After setup:
+
+Dashboard
+├── App Lock
+├── Vault
+├── Intruder Logs
+├── Themes
+├── Security Center
+├── Settings
+
+
+---
+
+2. First-Time User Flow
+
+STEP 1 — Splash Screen
+
+Purpose
+
+branding
+
+quick initialization
+
+security checks
+
+
+Actions
+
+check app state
+
+verify permissions
+
+load theme
+
+
+Navigation
+
+If setup incomplete
+→ Welcome
+
+If setup complete
+→ Authentication
+
+
+---
+
+STEP 2 — Welcome Screen
+
+Purpose
+
+Introduce:
+
+privacy philosophy
+
+local-only storage
+
+premium security
+
+
+UI Elements
+
+animated logo
+
+tagline
+
+feature highlights
+
+“Get Started” button
+
+
+Navigation
+
+Get Started
+↓
+Onboarding
+
+
+---
+
+STEP 3 — Onboarding Carousel
+
+Purpose
+
+Educate user about:
+
+app locking
+
+vault
+
+intruder detection
+
+local-only privacy
+
+
+Pages
+
+Page 1
+
+App protection
+
+Page 2
+
+Vault security
+
+Page 3
+
+Intruder detection
+
+Page 4
+
+Offline privacy
+
+Navigation
+
+Continue
+↓
+Permission Setup
+
+
+---
+
+3. Permission Flow
+
+This is CRITICAL.
+
+Do NOT request all permissions simultaneously.
+
+
+---
+
+Permission Sequence
+
+Usage Access
+↓
+Accessibility Service
+↓
+Overlay Permission
+↓
+Notification Permission
+↓
+Biometric Setup
+
+
+---
+
+Permission Screen Structure
+
+Each permission screen contains:
+
+animation
+
+explanation
+
+why it is needed
+
+setup button
+
+skip option (if possible)
+
+
+
+---
+
+4. Lock Creation Flow
+
+Create Master Lock
+
+Options
+
+PIN
+
+Pattern
+
+Password
+
+
+
+---
+
+Confirmation Flow
+
+Create Lock
+↓
+Confirm Lock
+↓
+Recovery Option
+↓
+Biometric Setup
+
+
+---
+
+Recovery Setup
+
+Options
+
+security question
+
+recovery code
+
+
+Stored locally only.
+
+
+---
+
+Biometric Setup
+
+Options
+
+enable fingerprint
+
+skip
+
+
+
+---
+
+Final Setup
+
+Setup Complete
+↓
+Enter Dashboard
+
+
+---
+
+5. Dashboard Flow
+
+Dashboard = Main Control Center
+
+Sections
+
+Dashboard
+├── Security Status
+├── Locked Apps
+├── Recent Alerts
+├── Vault Overview
+├── Quick Actions
+
+
+---
+
+Dashboard Cards
+
+Security Score Card
+
+Shows:
+
+enabled protections
+
+permission status
+
+
+
+---
+
+Locked Apps Card
+
+Shows:
+
+total protected apps
+
+quick edit button
+
+
+
+---
+
+Vault Card
+
+Shows:
+
+secure files count
+
+storage usage
+
+
+
+---
+
+Intruder Card
+
+Shows:
+
+recent failed attempts
+
+latest intruder image
+
+
+
+---
+
+Bottom Navigation
+
+Home
+Vault
+Security
+Themes
+Settings
+
+
+---
+
+6. App Lock Flow
+
+App Selection Screen
+
+Features
+
+installed app list
+
+search
+
+categories
+
+quick lock toggle
+
+
+
+---
+
+Lock Configuration Flow
+
+Select App
+↓
+Choose Lock Type
+↓
+Choose Relock Policy
+↓
+Save Protection
+
+
+---
+
+Relock Policies
+
+Options
+
+instant
+
+after screen off
+
+after timeout
+
+
+
+---
+
+Locked App Launch Flow
+
+User Opens Protected App
+↓
+Foreground Detection
+↓
+Overlay Appears
+↓
+Authentication
+↓
+Access Granted
+
+
+---
+
+Authentication Failure Flow
+
+Wrong Password
+↓
+Increment Attempt Counter
+↓
+Threshold Reached
+↓
+Capture Intruder Selfie
+↓
+Store Locally
+
+
+---
+
+7. Vault Flow
+
+Vault Home
+
+Categories
+
+Photos
+Videos
+Documents
+Audio
+
+
+---
+
+Import Flow
+
+Select File
+↓
+Encrypt File
+↓
+Move To Secure Storage
+↓
+Hide Original
+↓
+Refresh Vault
+
+
+---
+
+File Viewing Flow
+
+Authenticate User
+↓
+Decrypt Temporarily
+↓
+View File
+↓
+Auto Cleanup
+
+
+---
+
+Vault Deletion Flow
+
+Delete File
+↓
+Secure Erase
+↓
+Remove Metadata
+
+
+---
+
+8. Intruder Detection Flow
+
+Intruder Log Screen
+
+Shows
+
+intruder images
+
+timestamps
+
+protected app targeted
+
+failed attempts
+
+
+
+---
+
+Intruder Alert Flow
+
+Failed Attempts
+↓
+Selfie Captured
+↓
+Store Locally
+↓
+Show Dashboard Alert
+
+
+---
+
+9. Stealth Mode Flow
+
+Hidden App Flow
+
+Option 1
+
+Hide launcher icon
+
+Option 2
+
+Fake calculator launcher
+
+
+---
+
+Fake Calculator Flow
+
+Open Fake Calculator
+↓
+Enter Secret PIN
+↓
+Launch Real App
+
+
+---
+
+10. Theme Flow
+
+Theme Settings
+
+Options
+
+Dark
+
+AMOLED
+
+Light
+
+
+
+---
+
+Customization
+
+Options
+
+accent colors
+
+animations
+
+blur intensity
+
+icon shape
+
+
+
+---
+
+11. Security Center Flow
+
+Security Center Sections
+
+Permissions
+Battery Optimization
+Biometric Status
+Accessibility Status
+Overlay Status
+
+
+---
+
+Problem Detection Flow
+
+Permission Revoked
+↓
+Security Alert
+↓
+Open Fix Guide
+
+
+---
+
+12. Settings Flow
+
+Settings Sections
+
+General
+Security
+Vault
+Themes
+Backup Export
+About
+
+
+---
+
+Backup Export
+
+Local Export Only
+
+Flow:
+
+Encrypt Backup
+↓
+Generate Local File
+↓
+Save To Device
+
+No cloud uploads.
+
+
+---
+
+13. App Restart Flow
+
+Boot Completed
+
+Device Reboot
+↓
+Restart Services
+↓
+Restore Protection
+↓
+Verify Permissions
+
+
+---
+
+14. Error Handling Flow
+
+Accessibility Disabled
+
+Detect Disabled Service
+↓
+Show Warning
+↓
+Guide User To Re-enable
+
+
+---
+
+Overlay Permission Removed
+
+Overlay Missing
+↓
+Lock Engine Paused
+↓
+Show Recovery Guide
+
+
+---
+
+15. Navigation Architecture
+
+Main Navigation Pattern
+
+Use:
+
+Single Activity
++
+Compose Navigation
++
+Nested Graphs
+
+
+---
+
+Navigation Groups
+
+Auth Graph
+Main Graph
+Vault Graph
+Settings Graph
+Security Graph
+
+
+---
+
+16. UX Principles
+
+Core UX Goals
+
+Speed
+
+Minimal taps.
+
+Clarity
+
+No confusing security setup.
+
+Trust
+
+Explain permissions clearly.
+
+Smoothness
+
+Animations must feel premium.
+
+Reliability
+
+Security actions must feel instant.
+
+
+---
+
+17. Final Navigation Summary
+
+Splash
+↓
+Welcome
+↓
+Onboarding
+↓
+Permissions
+↓
+Master Lock Setup
+↓
+Dashboard
+    ├── App Lock
+    ├── Vault
+    ├── Intruder Logs
+    ├── Security Center
+    ├── Themes
+    └── Settings

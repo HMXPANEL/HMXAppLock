@@ -1,0 +1,853 @@
+CROSS-DEVICE COMPATIBILITY & RELIABILITY PLAN
+
+Advanced Android App Lock Version 1.0
+
+This document defines:
+
+cross-device compatibility strategy
+
+Android version support
+
+OEM handling
+
+reliability systems
+
+device testing strategy
+
+overlay consistency
+
+service survival strategy
+
+
+Goal:
+
+work reliably across real Android devices
+
+NOT:
+
+works only on developer phone
+
+
+---
+
+1. COMPATIBILITY PHILOSOPHY
+
+Important Reality
+
+Android is fragmented.
+
+Different devices behave differently:
+
+Xiaomi
+
+Samsung
+
+Oppo
+
+Vivo
+
+Huawei
+
+OnePlus
+
+Pixel
+
+
+All modify Android behavior.
+
+
+---
+
+Core Principle
+
+The app must:
+
+adapt dynamically
+
+monitor reliability continuously
+
+recover from failures automatically
+
+guide users clearly
+
+
+
+---
+
+Main Goal
+
+stable app locking across multiple Android devices
+
+
+---
+
+2. TARGET DEVICE SUPPORT
+
+Android Version Support
+
+Android Version	Support
+
+Android 10	Supported
+Android 11	Supported
+Android 12	Supported
+Android 13	Supported
+Android 14	Supported
+Android 15	Supported
+
+
+
+---
+
+Device Categories
+
+Category	Support
+
+Phones	Full
+Tablets	Full
+Foldables	Adaptive
+
+
+
+---
+
+RAM Support Goals
+
+RAM	Target
+
+4GB	Supported
+6GB	Optimized
+8GB+	Premium Experience
+
+
+
+---
+
+3. DEVICE RELIABILITY LAYERS
+
+Compatibility Stack
+
+OEM Detection
+↓
+Permission Validation
+↓
+Service Monitoring
+↓
+Overlay Optimization
+↓
+Recovery System
+
+
+---
+
+Example Flow
+
+App Installed On Xiaomi
+↓
+OEM Detected
+↓
+Xiaomi Compatibility Rules Loaded
+↓
+Recovery Monitoring Activated
+
+
+---
+
+4. ACCESSIBILITY RELIABILITY STRATEGY
+
+Problem
+
+Accessibility behavior differs across devices.
+
+Some OEMs:
+
+delay events
+
+kill services
+
+suspend monitoring
+
+
+
+---
+
+Compatibility Strategy
+
+Use:
+
+lightweight event filtering
+
+service heartbeat monitoring
+
+accessibility validation checks
+
+
+
+---
+
+Example
+
+Accessibility Service Stops
+↓
+Heartbeat Missing
+↓
+Recovery Warning Triggered
+↓
+User Guided To Restore Service
+
+
+---
+
+5. OVERLAY COMPATIBILITY STRATEGY
+
+Problem
+
+Overlays behave differently across devices.
+
+OEMs may:
+
+delay overlays
+
+block overlays
+
+reduce overlay priority
+
+
+
+---
+
+Goal
+
+Overlay should:
+
+appear instantly
+
+avoid flicker
+
+remain stable during app switching
+
+
+
+---
+
+Optimization Strategy
+
+Use:
+
+preloaded overlay UI
+
+cached Compose states
+
+minimal initial rendering
+
+
+
+---
+
+Example
+
+Protected App Opens
+↓
+Overlay Already Cached
+↓
+Overlay Appears Instantly
+
+
+---
+
+6. BATTERY OPTIMIZATION STRATEGY
+
+Major Problem
+
+OEM battery optimization kills:
+
+monitoring services
+
+overlays
+
+background tasks
+
+
+Especially on:
+
+Xiaomi
+
+Vivo
+
+Oppo
+
+
+
+---
+
+Detection Strategy
+
+Check:
+
+battery optimization status
+
+service uptime
+
+background execution reliability
+
+
+
+---
+
+Recovery Example
+
+Monitoring Service Killed
+↓
+Protection Health Drops
+↓
+Recovery Card Appears
+↓
+Guide User To Disable Optimization
+
+
+---
+
+7. REBOOT RELIABILITY STRATEGY
+
+Problem
+
+Some devices fail to restart services correctly.
+
+
+---
+
+Solution
+
+Use:
+
+BOOT_COMPLETED receiver
+
+startup validation
+
+delayed initialization checks
+
+
+
+---
+
+Example
+
+Device Reboots
+↓
+Monitoring Restored
+↓
+Locked Apps Reloaded
+↓
+Protection Active Again
+
+
+---
+
+8. SERVICE HEALTH MONITORING
+
+Purpose
+
+Continuously verify:
+
+accessibility running
+
+overlay active
+
+monitoring alive
+
+sessions valid
+
+
+
+---
+
+Heartbeat System
+
+Services periodically update:
+
+lastAliveTimestamp
+
+
+---
+
+Example
+
+Heartbeat Missing For 60 Seconds
+↓
+Auto Restart Attempted
+↓
+Recovery Notification Shown
+
+
+---
+
+9. LOW-END DEVICE STRATEGY
+
+Problem
+
+Low-end devices may:
+
+lag
+
+kill apps aggressively
+
+struggle with animations
+
+
+
+---
+
+Optimization Strategy
+
+Reduce:
+
+blur intensity
+
+animation complexity
+
+memory usage
+
+
+
+---
+
+Adaptive UI Example
+
+4GB RAM Device Detected
+↓
+Reduced Animation Mode Enabled
+↓
+Lower Blur Rendering Used
+
+
+---
+
+10. HIGH-END DEVICE STRATEGY
+
+Goal
+
+Enable:
+
+smoother animations
+
+richer blur effects
+
+enhanced UI polish
+
+
+
+---
+
+Example
+
+8GB+ Device Detected
+↓
+Premium Motion Effects Enabled
+
+
+---
+
+11. SAMSUNG COMPATIBILITY
+
+Common Issues
+
+Samsung may:
+
+deep sleep apps
+
+optimize background services
+
+
+
+---
+
+Required Actions
+
+Guide users to:
+
+unrestricted battery
+
+remove from sleeping apps
+
+
+
+---
+
+Example
+
+App Added To Deep Sleep
+↓
+Monitoring Delayed
+↓
+Warning Displayed
+
+
+---
+
+12. XIAOMI COMPATIBILITY
+
+Common Issues
+
+MIUI/HyperOS aggressively:
+
+kills services
+
+blocks auto start
+
+interrupts overlays
+
+
+
+---
+
+Required Setup
+
+Guide user to:
+
+enable auto start
+
+disable battery optimization
+
+lock app in recents
+
+
+
+---
+
+Example
+
+Xiaomi Detected
+↓
+OEM Wizard Opens
+↓
+User Enables Auto Start
+↓
+Protection Stability Improves
+
+
+---
+
+13. OPPO / VIVO COMPATIBILITY
+
+Common Issues
+
+ColorOS/FuntouchOS may:
+
+delay overlays
+
+suspend services
+
+reset permissions
+
+
+
+---
+
+Recovery Strategy
+
+Use:
+
+periodic permission validation
+
+overlay health checks
+
+service recovery logic
+
+
+
+---
+
+Example
+
+Overlay Permission Revoked
+↓
+Protection Warning Triggered
+↓
+Recovery Guide Opens
+
+
+---
+
+14. PIXEL COMPATIBILITY
+
+Behavior
+
+Pixel devices are closest to stock Android.
+
+Usually:
+
+most stable
+
+fastest overlays
+
+best accessibility reliability
+
+
+
+---
+
+Strategy
+
+Minimal OEM handling required.
+
+
+---
+
+15. DEVICE PERFORMANCE ADAPTATION
+
+Dynamic Optimization
+
+The app should adapt based on:
+
+RAM
+
+CPU class
+
+Android version
+
+OEM behavior
+
+
+
+---
+
+Example
+
+Low-End Device Detected
+↓
+Reduced Motion Mode Enabled
+↓
+Battery Usage Lowered
+
+
+---
+
+16. RESPONSIVE UI STRATEGY
+
+Goal
+
+UI must scale correctly across:
+
+phones
+
+tablets
+
+foldables
+
+
+
+---
+
+Tablet Example
+
+Tablet Detected
+↓
+Dashboard Switches To Two Columns
+
+
+---
+
+Foldable Example
+
+Device Unfolded
+↓
+Adaptive Grid Expands
+↓
+Navigation Repositions
+
+
+---
+
+17. DEVICE TESTING MATRIX
+
+Required Test Devices
+
+OEM	Priority
+
+Xiaomi	Critical
+Samsung	Critical
+Oppo	High
+Vivo	High
+Pixel	High
+OnePlus	Medium
+
+
+
+---
+
+Critical Test Scenarios
+
+rapid app switching
+phone reboot
+idle overnight
+battery saver enabled
+overlay revocation
+accessibility disabled
+low memory stress
+
+
+---
+
+18. RELIABILITY TESTING STRATEGY
+
+Overlay Tests
+
+Verify:
+
+overlay speed
+
+no flicker
+
+no delayed rendering
+
+
+
+---
+
+Accessibility Tests
+
+Verify:
+
+foreground detection
+
+service recovery
+
+event reliability
+
+
+
+---
+
+Vault Tests
+
+Verify:
+
+encrypted imports
+
+memory cleanup
+
+thumbnail loading
+
+
+
+---
+
+Example
+
+Protected App Opens 100 Times
+↓
+Measure Overlay Latency
+↓
+Verify No Missed Locks
+
+
+---
+
+19. FAIL-SAFE STRATEGY
+
+Important Principle
+
+If protection reliability drops:
+
+warn honestly
+
+Never pretend protection still works.
+
+
+---
+
+Example
+
+Accessibility Disabled
+↓
+Security State Turns Critical
+↓
+Dashboard Warning Appears
+
+
+---
+
+20. UPDATE COMPATIBILITY STRATEGY
+
+Goal
+
+Ensure updates do not:
+
+break sessions
+
+corrupt database
+
+disable overlays
+
+
+
+---
+
+Strategy
+
+Use:
+
+Room migrations
+
+compatibility testing
+
+staged APK rollout
+
+
+
+---
+
+Example
+
+Version 1.2 Installed
+↓
+Database Migration Runs
+↓
+Protection Restored Successfully
+
+
+---
+
+21. USER EDUCATION STRATEGY
+
+Important Rule
+
+Users should understand:
+
+battery optimization risks
+
+permission importance
+
+OEM restrictions
+
+
+WITHOUT:
+
+technical overload
+
+scary messaging
+
+
+
+---
+
+Good Example
+
+Your device may stop background protection.
+We recommend disabling battery optimization.
+
+
+---
+
+22. FINAL CROSS-DEVICE PRINCIPLE
+
+Your app should behave like:
+
+an adaptive Android security layer
+
+NOT:
+
+a single-device prototype
+
+The real goal is:
+
+stable protection across real-world Android devices

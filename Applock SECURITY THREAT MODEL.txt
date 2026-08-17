@@ -1,0 +1,933 @@
+SECURITY THREAT MODEL — Advanced Android App Lock
+
+Version 1.0
+
+This document defines:
+
+possible attack vectors
+
+Android security limitations
+
+bypass scenarios
+
+threat mitigation systems
+
+detection strategies
+
+recovery flows
+
+
+Goal:
+
+practical protection
+not fake security
+
+Important reality:
+
+No Android app lock is perfectly secure.
+
+Because:
+
+Android restricts background control
+
+OEMs modify system behavior
+
+apps cannot become true system security layers
+
+
+The goal is:
+
+reduce bypass opportunities
+detect failures quickly
+restore protection reliably
+
+
+---
+
+1. THREAT MODEL PHILOSOPHY
+
+Security Priorities
+
+The app must:
+
+protect sensitive apps
+
+protect vault data
+
+survive common bypasses
+
+warn users about failures
+
+degrade safely
+
+
+
+---
+
+Security Assumptions
+
+Assume attacker may:
+
+access unlocked device briefly
+
+restart phone
+
+revoke permissions
+
+inspect recent apps
+
+attempt uninstall
+
+browse storage
+
+
+
+---
+
+Out of Scope
+
+The app does NOT guarantee protection against:
+
+root users
+
+forensic extraction
+
+kernel-level attacks
+
+ADB exploits
+
+malware with elevated privileges
+
+
+
+---
+
+2. THREAT CLASSIFICATION
+
+Threat Levels
+
+Level	Description
+
+Low	casual snooping
+Medium	intentional bypass
+High	technical attacker
+Critical	rooted/system attack
+
+
+
+---
+
+Main Threat Areas
+
+Permission Bypass
+Overlay Failures
+OEM Restrictions
+Storage Attacks
+UI Leakage
+Session Abuse
+
+
+---
+
+3. ACCESSIBILITY DISABLE ATTACK
+
+Threat
+
+Attacker disables:
+
+Accessibility Service
+
+Now:
+
+foreground monitoring stops
+
+lock engine breaks
+
+
+
+---
+
+Attack Flow
+
+Open Settings
+↓
+Disable Accessibility
+↓
+Protected Apps Open Normally
+
+
+---
+
+Mitigation
+
+Detection
+
+Continuously monitor:
+
+Accessibility enabled state
+
+
+---
+
+Recovery Flow
+
+Accessibility Disabled
+↓
+Immediate Security Alert
+↓
+Pause Protection State
+↓
+Guide User To Re-enable
+
+
+---
+
+Additional Mitigation
+
+Optional:
+
+lock settings screen
+
+hide app icon
+
+stealth launcher
+
+
+
+---
+
+4. OVERLAY PERMISSION ATTACK
+
+Threat
+
+Attacker revokes:
+
+Draw Over Apps permission
+
+Now overlay cannot appear.
+
+
+---
+
+Attack Example
+
+Revoke Overlay Permission
+↓
+Launch Locked App
+↓
+No Lock Screen Appears
+
+
+---
+
+Mitigation
+
+Permission Monitoring
+
+Track:
+
+SYSTEM_ALERT_WINDOW state
+
+
+---
+
+Recovery Flow
+
+Overlay Permission Missing
+↓
+Show Persistent Warning
+↓
+Open Recovery Guide
+
+
+---
+
+5. REBOOT BYPASS ATTACK
+
+Threat
+
+Attacker restarts device.
+
+Without reboot recovery:
+
+monitoring stops
+
+protection disappears
+
+
+
+---
+
+Attack Example
+
+Restart Phone
+↓
+App Services Dead
+↓
+Locked Apps Open Freely
+
+
+---
+
+Mitigation
+
+Use:
+
+BOOT_COMPLETED receiver
+
+
+---
+
+Recovery Flow
+
+Device Boot
+↓
+Restore Core Monitoring
+↓
+Reload Locked Apps
+↓
+Verify Permissions
+
+
+---
+
+6. RECENT APPS LEAK
+
+Threat
+
+Sensitive app preview visible in:
+
+Recent Apps screen
+
+
+---
+
+Example
+
+User locks:
+
+gallery
+
+banking app
+
+
+But recent apps still shows content preview.
+
+
+---
+
+Mitigation
+
+Use:
+
+FLAG_SECURE
+
+
+---
+
+Protection Flow
+
+Protected App Opens
+↓
+Secure Overlay Active
+↓
+Recent App Thumbnail Blocked
+
+
+---
+
+7. SCREENSHOT / SCREEN RECORDING LEAK
+
+Threat
+
+Attacker captures:
+
+screenshots
+
+screen recordings
+
+
+of protected content.
+
+
+---
+
+Mitigation
+
+Use:
+
+FLAG_SECURE
+
+
+---
+
+Example Flow
+
+Attempt Screenshot
+↓
+Android Blocks Capture
+
+
+---
+
+8. NOTIFICATION LEAK
+
+Threat
+
+Locked apps still show:
+
+message previews
+
+OTPs
+
+sensitive content
+
+
+in notifications.
+
+
+---
+
+Example
+
+WhatsApp Locked
+↓
+Message Preview Visible
+
+
+---
+
+Mitigation Options
+
+Option 1
+
+User education.
+
+Option 2
+
+Notification privacy assistant.
+
+
+---
+
+Important Reality
+
+Android limits notification control heavily.
+
+
+---
+
+9. OEM BACKGROUND KILLING
+
+Threat
+
+OEM aggressively kills:
+
+accessibility monitoring
+
+overlay services
+
+
+Especially:
+
+Xiaomi
+
+Oppo
+
+Vivo
+
+
+
+---
+
+Example
+
+Battery Optimization Enabled
+↓
+Background Service Killed
+↓
+Protection Stops
+
+
+---
+
+Mitigation
+
+OEM Detection
+
+Detect manufacturer.
+
+
+---
+
+Recovery Flow
+
+Service Killed
+↓
+Security Warning
+↓
+Open OEM Guide
+
+
+---
+
+Additional Mitigation
+
+Guide user to:
+
+disable battery optimization
+
+enable auto-start
+
+lock app in recents
+
+
+
+---
+
+10. UNINSTALL ATTACK
+
+Threat
+
+Attacker attempts:
+
+uninstall app
+
+
+---
+
+Mitigation
+
+Use:
+
+Device Admin (optional)
+
+uninstall protection warning
+
+
+
+---
+
+Example Flow
+
+Attempt Uninstall
+↓
+Device Admin Prompt
+↓
+Block Removal
+
+
+---
+
+Important Limitation
+
+Android still allows:
+
+owner-controlled uninstall
+
+
+App cannot become undeletable.
+
+
+---
+
+11. VAULT EXTRACTION ATTACK
+
+Threat
+
+Attacker accesses:
+
+Android/data/
+
+or exported storage.
+
+
+---
+
+Mitigation
+
+Encrypt Everything
+
+Vault files stored as:
+
+AES encrypted binaries
+
+
+---
+
+Storage Strategy
+
+Use:
+
+app-private directories
+
+hidden filenames
+
+encrypted metadata
+
+
+
+---
+
+Example Flow
+
+Open Vault File
+↓
+Temporary Decryption
+↓
+View File
+↓
+Secure Cleanup
+
+
+---
+
+12. SESSION ABUSE ATTACK
+
+Threat
+
+User unlocks app once.
+
+Attacker later accesses same app during active session.
+
+
+---
+
+Example
+
+Instagram Unlocked
+↓
+Phone Handed To Friend
+↓
+Friend Opens Instagram Freely
+
+
+---
+
+Mitigation
+
+Use:
+
+relock timers
+
+screen-off relock
+
+inactivity detection
+
+
+
+---
+
+Session Policies
+
+Policy	Protection
+
+instant	highest security
+screen_off	balanced
+timeout	convenience
+
+
+
+---
+
+13. FAKE CRASH / UI CONFUSION ATTACK
+
+Threat
+
+Attacker manipulates:
+
+overlays
+
+fast switching
+
+recents screen
+
+
+to confuse lock state.
+
+
+---
+
+Mitigation
+
+Use:
+
+overlay state validation
+
+active app verification
+
+debounce timing
+
+
+
+---
+
+Example
+
+Rapid App Switching
+↓
+Overlay State Revalidated
+↓
+Lock Re-triggered
+
+
+---
+
+14. ROOT DEVICE THREAT
+
+Threat
+
+Rooted device can:
+
+inspect storage
+
+bypass overlays
+
+inject hooks
+
+disable services
+
+
+
+---
+
+Important Reality
+
+Root defeats many Android security assumptions.
+
+
+---
+
+Mitigation
+
+Root Detection
+
+Detect:
+
+Magisk
+
+su binaries
+
+modified system state
+
+
+
+---
+
+Response
+
+Warn User
+↓
+Reduce Trust Level
+↓
+Recommend Disabling Sensitive Features
+
+
+---
+
+15. MEMORY INSPECTION THREAT
+
+Threat
+
+Sensitive data remains:
+
+in RAM
+
+cached previews
+
+temporary files
+
+
+
+---
+
+Mitigation
+
+Use:
+
+memory cleanup
+
+temporary decryption only
+
+secure cache clearing
+
+
+
+---
+
+Example
+
+View Vault Image
+↓
+Decrypt Temporarily
+↓
+Close Viewer
+↓
+Clear Memory Cache
+
+
+---
+
+16. PHISHING / FAKE OVERLAY THREAT
+
+Threat
+
+Malicious apps create fake overlays to steal PIN.
+
+
+---
+
+Mitigation
+
+Use:
+
+recognizable lock branding
+
+biometric preference
+
+secure overlay validation
+
+
+
+---
+
+User Education
+
+Explain:
+
+Only trust official lock screen
+
+
+---
+
+17. DATABASE TAMPERING THREAT
+
+Threat
+
+Attacker modifies:
+
+database values
+
+lock settings
+
+session records
+
+
+
+---
+
+Mitigation
+
+Use:
+
+encrypted sensitive fields
+
+integrity checks
+
+session expiration validation
+
+
+
+---
+
+Example
+
+Modified Unlock Session
+↓
+Integrity Validation Fails
+↓
+Session Invalidated
+
+
+---
+
+18. THREAT DETECTION ENGINE
+
+Monitor Continuously
+
+Track:
+
+accessibility state
+
+overlay permission
+
+service health
+
+battery restrictions
+
+suspicious failures
+
+
+
+---
+
+Example Flow
+
+Critical Permission Revoked
+↓
+Security Score Drops
+↓
+Dashboard Warning Appears
+
+
+---
+
+19. SECURITY UX STRATEGY
+
+Important Principle
+
+Security UX should:
+
+inform clearly
+
+avoid panic
+
+guide recovery
+
+
+
+---
+
+Avoid
+
+aggressive popups
+
+fake fear tactics
+
+misleading claims
+
+
+
+---
+
+Good Example
+
+"Accessibility service disabled.
+Protection may not work properly."
+
+
+---
+
+Bad Example
+
+"YOUR PHONE IS HACKED"
+
+
+---
+
+20. FINAL SECURITY PRINCIPLE
+
+This app should provide:
+
+practical Android privacy protection
+
+NOT:
+
+fake "military-grade" marketing claims
+
+The real goal is:
+
+stable protection
+fast recovery
+minimal leaks
+trustworthy behavior

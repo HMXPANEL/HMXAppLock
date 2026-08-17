@@ -1,0 +1,983 @@
+PERFORMANCE STRATEGY — Advanced Android App Lock
+
+Version 1.0
+
+This document defines:
+
+performance goals
+
+optimization architecture
+
+memory strategy
+
+battery optimization
+
+overlay latency reduction
+
+Compose optimization
+
+background execution efficiency
+
+
+Goal:
+
+fast
+lightweight
+responsive
+battery-efficient
+stable
+
+Important reality:
+
+A security app runs continuously.
+
+Unlike normal apps:
+
+monitoring stays active
+
+overlays appear instantly
+
+services survive background state
+
+encryption runs frequently
+
+
+Bad optimization causes:
+
+battery drain
+
+lag
+
+service kills
+
+delayed overlays
+
+poor UX
+
+OEM instability
+
+
+
+---
+
+1. PERFORMANCE PHILOSOPHY
+
+Core Principles
+
+1. Instant Security Response
+
+Lock overlays must feel:
+
+near-instant
+
+
+---
+
+2. Minimal Battery Usage
+
+Monitoring should:
+
+avoid polling
+
+avoid unnecessary wakeups
+
+remain event-driven
+
+
+
+---
+
+3. Lightweight UI
+
+Compose UI must:
+
+minimize recomposition
+
+avoid heavy rendering
+
+optimize animations
+
+
+
+---
+
+4. Memory Safety
+
+Vault + overlays should:
+
+avoid memory leaks
+
+clear sensitive data quickly
+
+minimize bitmap pressure
+
+
+
+---
+
+2. PERFORMANCE TARGETS
+
+Core Metrics
+
+Metric	Target
+
+Overlay Launch	<300ms
+App Startup	<2s
+Dashboard FPS	60fps
+Memory Usage	optimized
+Idle Battery Drain	minimal
+
+
+
+---
+
+User Experience Goals
+
+The app should:
+
+feel system-native
+
+avoid visible lag
+
+avoid UI stutter
+
+
+
+---
+
+3. APP STARTUP STRATEGY
+
+Problem
+
+Large initialization causes:
+
+slow startup
+
+ANRs
+
+frozen splash screens
+
+
+
+---
+
+Solution
+
+Use:
+
+lazy initialization
+
+
+---
+
+Startup Layers
+
+Critical Startup
+
+Load immediately:
+
+theme
+
+navigation
+
+core security state
+
+
+
+---
+
+Deferred Startup
+
+Load later:
+
+vault previews
+
+analytics logs
+
+large caches
+
+
+
+---
+
+Example Flow
+
+App Launch
+↓
+Load Critical Systems
+↓
+Dashboard Visible
+↓
+Background Initialization Continues
+
+
+---
+
+4. OVERLAY PERFORMANCE STRATEGY
+
+Why Critical?
+
+Overlay delay directly affects:
+
+security perception
+
+Even:
+
+500ms delay
+
+feels broken.
+
+
+---
+
+Optimization Goals
+
+Overlay should:
+
+appear instantly
+
+avoid flicker
+
+avoid layout lag
+
+
+
+---
+
+Optimization Techniques
+
+Preload Overlay
+
+Keep lightweight overlay state ready.
+
+
+---
+
+Cached Compose Trees
+
+Avoid rebuilding overlay UI repeatedly.
+
+
+---
+
+Minimal Overlay UI
+
+Overlay should initially load:
+
+app icon
+
+lock prompt
+
+keypad
+
+
+ONLY.
+
+
+---
+
+Example Flow
+
+Protected App Opens
+↓
+Overlay Already Prepared
+↓
+Instant Render
+↓
+Authentication Starts
+
+
+---
+
+Bad Flow
+
+Protected App Opens
+↓
+Create Entire Overlay From Scratch
+↓
+Heavy Animation
+↓
+Visible Delay
+
+
+---
+
+5. ACCESSIBILITY PERFORMANCE STRATEGY
+
+Problem
+
+Accessibility events fire constantly.
+
+Bad handling causes:
+
+battery drain
+
+CPU spikes
+
+lag
+
+
+
+---
+
+Solution
+
+Use:
+
+event filtering
+
+
+---
+
+Monitor Only Necessary Events
+
+Ignore:
+
+irrelevant packages
+
+duplicate events
+
+noisy transitions
+
+
+
+---
+
+Example
+
+Accessibility Event
+↓
+Package Filter
+↓
+Protected App Check
+↓
+Trigger Only If Needed
+
+
+---
+
+Debounce Strategy
+
+Prevent:
+
+repeated overlay triggers
+
+rapid duplicate events
+
+
+
+---
+
+6. COMPOSE PERFORMANCE STRATEGY
+
+Problem
+
+Bad Compose architecture causes:
+
+unnecessary recomposition
+
+jank
+
+dropped frames
+
+
+
+---
+
+Core Compose Rules
+
+Use Immutable UI State
+
+Good:
+
+data class UiState(...)
+
+
+---
+
+Avoid Massive State Objects
+
+Split states by feature.
+
+
+---
+
+Use Stable Models
+
+Prevent unnecessary recomposition.
+
+
+---
+
+Example Flow
+
+Toggle Changes
+↓
+Only Toggle Re-composes
+↓
+Entire Screen NOT Rebuilt
+
+
+---
+
+Bad Example
+
+One Small Change
+↓
+Whole Dashboard Re-composes
+
+
+---
+
+7. IMAGE & VAULT PERFORMANCE
+
+Problem
+
+Vault images/videos can:
+
+consume huge memory
+
+freeze UI
+
+cause crashes
+
+
+
+---
+
+Strategy
+
+Use:
+
+thumbnail generation
+
+lazy grids
+
+image caching
+
+temporary decoding
+
+
+
+---
+
+Example
+
+Vault Opens
+↓
+Load Thumbnails Only
+↓
+Full Image Loaded On Demand
+
+
+---
+
+Secure Cleanup
+
+After viewing:
+
+clear memory cache
+
+
+---
+
+8. DATABASE PERFORMANCE STRATEGY
+
+Problem
+
+Heavy database operations cause:
+
+UI lag
+
+blocking
+
+ANRs
+
+
+
+---
+
+Strategy
+
+Use:
+
+coroutines
+
+Flow
+
+indexing
+
+background dispatchers
+
+
+
+---
+
+Example
+
+Insert Vault Metadata
+↓
+Background Thread
+↓
+UI Remains Smooth
+
+
+---
+
+Indexed Fields
+
+Optimize:
+
+package lookups
+
+vault searches
+
+session queries
+
+
+
+---
+
+9. MEMORY MANAGEMENT STRATEGY
+
+Critical Areas
+
+High memory risk:
+
+overlays
+
+vault media
+
+animations
+
+image decoding
+
+
+
+---
+
+Strategies
+
+Bitmap Recycling
+
+Release unused images.
+
+
+---
+
+Avoid Large Cached Images
+
+Store:
+
+thumbnails
+
+instead of full images.
+
+
+---
+
+Temporary Decryption Only
+
+Vault files:
+
+decrypt temporarily
+
+then clear memory.
+
+
+---
+
+Example
+
+View Vault Image
+↓
+Temporary Decode
+↓
+Close Viewer
+↓
+Memory Cleared
+
+
+---
+
+10. BACKGROUND SERVICE OPTIMIZATION
+
+Problem
+
+Persistent services drain battery.
+
+
+---
+
+Strategy
+
+Use:
+
+event-driven monitoring
+
+NOT:
+
+constant polling
+
+
+---
+
+Good Strategy
+
+Accessibility Event
+↓
+Check Protected App
+↓
+Trigger Overlay Only If Needed
+
+
+---
+
+Bad Strategy
+
+Infinite Background Loop
+↓
+Constant Package Scanning
+
+
+---
+
+11. BATTERY OPTIMIZATION STRATEGY
+
+Core Goal
+
+Remain:
+
+reliable without draining battery
+
+
+---
+
+Strategies
+
+Reduce Wakeups
+
+Avoid unnecessary timers.
+
+
+---
+
+Use Lifecycle Awareness
+
+Pause non-critical work when:
+
+app backgrounded
+
+device idle
+
+
+
+---
+
+Example
+
+Dashboard Hidden
+↓
+Heavy UI Updates Paused
+
+
+---
+
+12. ANIMATION PERFORMANCE STRATEGY
+
+Problem
+
+Heavy animations cause:
+
+frame drops
+
+battery drain
+
+
+
+---
+
+Strategy
+
+Use:
+
+lightweight transitions
+
+GPU-friendly effects
+
+short animations
+
+
+
+---
+
+Avoid
+
+excessive blur layers
+
+overdraw
+
+giant particle systems
+
+
+
+---
+
+Example
+
+Good:
+
+subtle glow pulse
+
+Bad:
+
+constant fullscreen animation chaos
+
+
+---
+
+13. NETWORK STRATEGY
+
+Important
+
+App is:
+
+local-first
+
+No cloud sync.
+
+
+---
+
+Benefits
+
+Removes:
+
+network latency
+
+sync overhead
+
+background uploads
+
+
+Improves:
+
+privacy
+
+responsiveness
+
+
+
+---
+
+14. BOOT PERFORMANCE STRATEGY
+
+Problem
+
+Heavy boot initialization slows device startup.
+
+
+---
+
+Strategy
+
+Critical Services Only
+
+Start:
+
+monitoring
+
+overlay readiness
+
+
+Delay:
+
+vault cache
+
+heavy UI preload
+
+
+
+---
+
+Example
+
+BOOT_COMPLETED
+↓
+Restore Monitoring
+↓
+Protection Active
+↓
+Secondary Systems Load Later
+
+
+---
+
+15. SESSION PERFORMANCE STRATEGY
+
+Goal
+
+Avoid:
+
+repeated authentication
+
+unnecessary overlay launches
+
+
+
+---
+
+Session Optimization
+
+Use:
+
+temporary unlock sessions
+
+relock timers
+
+app-specific state
+
+
+
+---
+
+Example
+
+Unlock Instagram
+↓
+5 Minute Session Active
+↓
+No Re-auth During Session
+
+
+---
+
+16. OEM PERFORMANCE STRATEGY
+
+Problem
+
+OEMs aggressively optimize background apps.
+
+
+---
+
+Strategy
+
+Optimize for:
+
+Xiaomi
+
+Oppo
+
+Vivo
+
+
+
+---
+
+Recovery Example
+
+Service Killed
+↓
+Heartbeat Missing
+↓
+Restart Triggered
+
+
+---
+
+17. PERFORMANCE MONITORING SYSTEM
+
+Local Monitoring Only
+
+Track locally:
+
+overlay latency
+
+service uptime
+
+memory warnings
+
+startup times
+
+
+
+---
+
+Example
+
+Overlay Launch Took 420ms
+↓
+Performance Warning Logged
+
+
+---
+
+Important
+
+No telemetry uploaded externally.
+
+
+---
+
+18. TESTING STRATEGY
+
+Test Areas
+
+Area	Goal
+
+overlay speed	instant response
+Compose FPS	smooth UI
+memory usage	stable
+battery drain	low impact
+
+
+
+---
+
+Critical Test Cases
+
+rapid app switching
+vault stress testing
+device reboot
+idle overnight
+large media imports
+
+
+---
+
+19. FAIL-SAFE STRATEGY
+
+Important Rule
+
+If optimization risks:
+
+security reliability
+
+security wins.
+
+
+---
+
+Example
+
+Better:
+
+slightly higher battery usage
+
+than:
+
+missed overlay protection
+
+
+---
+
+20. FINAL PERFORMANCE PRINCIPLE
+
+The app should feel like:
+
+a lightweight native Android security layer
+
+NOT:
+
+a heavy always-running background app

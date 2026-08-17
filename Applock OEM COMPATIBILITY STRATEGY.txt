@@ -1,0 +1,862 @@
+OEM COMPATIBILITY STRATEGY — Advanced Android App Lock
+
+Version 1.0
+
+This document defines:
+
+OEM-specific Android behavior
+
+background restriction handling
+
+service survival strategy
+
+permission reliability
+
+battery optimization handling
+
+recovery flows
+
+device-specific onboarding
+
+
+Goal:
+
+maximize protection reliability
+across real Android devices
+
+Important reality:
+
+Android is NOT consistent across OEMs.
+
+Samsung, Xiaomi, Oppo, Vivo, Huawei, OnePlus: all modify Android differently.
+
+A security app that works perfectly on Pixel may:
+
+fail silently on Xiaomi
+
+lose overlays on Oppo
+
+get killed on Vivo
+
+
+This document exists to prevent:
+
+silent protection failure
+
+
+---
+
+1. OEM STRATEGY PHILOSOPHY
+
+Core Principle
+
+The app must:
+
+detect OEM behavior
+
+adapt recovery flows
+
+educate users clearly
+
+monitor service reliability continuously
+
+
+
+---
+
+Security Truth
+
+Your biggest enemy is NOT hackers.
+
+It is:
+
+aggressive battery management
+
+from OEMs.
+
+
+---
+
+2. OEM COMPATIBILITY ARCHITECTURE
+
+Detection Layer
+
+Detect device manufacturer using:
+
+Build.MANUFACTURER
+Build.BRAND
+Build.MODEL
+
+
+---
+
+OEM Profile System
+
+Create:
+
+OEM compatibility profiles
+
+Each profile defines:
+
+battery optimization behavior
+
+overlay reliability
+
+auto-start handling
+
+permission recovery flow
+
+
+
+---
+
+Example
+
+XiaomiProfile
+OppoProfile
+SamsungProfile
+
+
+---
+
+3. XIAOMI / HYPEROS STRATEGY
+
+Problem
+
+Xiaomi aggressively:
+
+kills background services
+
+disables overlays
+
+blocks auto-start
+
+suspends accessibility behavior
+
+
+Especially under:
+
+MIUI
+
+HyperOS
+
+
+
+---
+
+Common Failure Example
+
+User Locks WhatsApp
+↓
+Phone Idle For Hours
+↓
+MIUI Kills Monitoring Service
+↓
+Protection Stops
+
+
+---
+
+Required Recovery Steps
+
+Guide user to:
+
+Disable Battery Optimization
+
+Enable Auto Start
+
+Lock App In Recents
+
+Allow Background Activity
+
+
+
+---
+
+Recovery UI Example
+
+"Xiaomi devices may stop protection in background.
+Please enable the following settings."
+
+
+---
+
+Xiaomi Setup Flow
+
+Detect Xiaomi
+↓
+Show OEM Setup Wizard
+↓
+Open Auto Start Settings
+↓
+Open Battery Settings
+↓
+Verify Protection Health
+
+
+---
+
+Xiaomi Priority
+
+Feature	Priority
+
+Auto Start	Critical
+Battery Exemption	Critical
+Accessibility Monitoring	High
+
+
+
+---
+
+4. OPPO / COLOROS STRATEGY
+
+Problem
+
+Oppo aggressively:
+
+interrupts overlays
+
+kills accessibility monitoring
+
+delays background restart
+
+
+
+---
+
+Common Failure
+
+Protected App Opens
+↓
+Overlay Delayed
+↓
+Sensitive Content Briefly Visible
+
+
+---
+
+Mitigation
+
+Overlay Optimization
+
+Use:
+
+preloaded overlays
+
+lightweight rendering
+
+fast session checks
+
+
+
+---
+
+Required User Actions
+
+Guide user to:
+
+allow background activity
+
+disable smart battery restrictions
+
+enable floating windows
+
+
+
+---
+
+Recovery Flow
+
+Overlay Failure Detected
+↓
+Security Warning Triggered
+↓
+Open ColorOS Recovery Guide
+
+
+---
+
+5. VIVO / FUNTOUCH STRATEGY
+
+Problem
+
+Vivo often:
+
+kills background tasks
+
+resets permissions
+
+delays service recovery
+
+
+
+---
+
+Common Failure Example
+
+Device Reboot
+↓
+Services Not Restarted
+↓
+Protection Missing
+
+
+---
+
+Mitigation
+
+Use:
+
+boot recovery validation
+
+persistent monitoring
+
+startup verification
+
+
+
+---
+
+Required User Steps
+
+Guide user to:
+
+enable auto-launch
+
+disable battery restrictions
+
+allow lock screen startup
+
+
+
+---
+
+Example Flow
+
+Boot Completed
+↓
+Protection Health Check
+↓
+Recovery Warning If Service Missing
+
+
+---
+
+6. SAMSUNG STRATEGY
+
+Problem
+
+Samsung is generally reliable but:
+
+may suspend apps in deep sleep
+
+may optimize aggressively over time
+
+
+
+---
+
+Common Failure
+
+App Added To Deep Sleep
+↓
+Monitoring Delayed
+
+
+---
+
+Mitigation
+
+Guide user to:
+
+remove app from sleeping apps
+
+allow unrestricted battery
+
+
+
+---
+
+Samsung Recovery UI
+
+"Samsung battery optimization may reduce protection reliability."
+
+
+---
+
+7. HUAWEI STRATEGY
+
+Problem
+
+Huawei aggressively:
+
+blocks background execution
+
+restricts overlays
+
+changes permission behavior
+
+
+
+---
+
+Common Failure
+
+Accessibility Active
+↓
+EMUI Restricts Background Execution
+↓
+Foreground Detection Stops
+
+
+---
+
+Mitigation
+
+Use:
+
+persistent health monitoring
+
+aggressive recovery checks
+
+
+
+---
+
+Recovery Flow
+
+Service Heartbeat Missing
+↓
+Attempt Auto Restart
+↓
+Show Huawei Recovery Guide
+
+
+---
+
+8. ONEPLUS STRATEGY
+
+Problem
+
+OnePlus is moderate but:
+
+background optimization can interfere
+
+overlays may delay occasionally
+
+
+
+---
+
+Mitigation
+
+Recommend:
+
+unrestricted battery
+
+persistent service permissions
+
+
+
+---
+
+Example Flow
+
+Overlay Delay Detected
+↓
+Performance Warning Logged
+
+
+---
+
+9. PIXEL STRATEGY
+
+Reality
+
+Pixel devices are:
+
+closest to stock Android
+
+Usually:
+
+best reliability
+
+best overlay behavior
+
+fewer restrictions
+
+
+
+---
+
+Strategy
+
+Minimal recovery flows needed.
+
+
+---
+
+10. OEM DETECTION ENGINE
+
+Purpose
+
+Automatically detect:
+
+manufacturer
+
+Android version
+
+OEM skin
+
+
+
+---
+
+Example
+
+val manufacturer = Build.MANUFACTURER
+
+
+---
+
+Flow
+
+App Launch
+↓
+Detect OEM
+↓
+Load OEM Profile
+↓
+Enable OEM-specific Recovery Rules
+
+
+---
+
+11. OEM SETUP WIZARD
+
+Purpose
+
+Provide guided setup.
+
+
+---
+
+Wizard Flow
+
+Detect Device
+↓
+Show OEM Instructions
+↓
+Open Correct Settings Pages
+↓
+Verify Protection Health
+
+
+---
+
+Xiaomi Example
+
+1. Enable Auto Start
+2. Disable Battery Optimization
+3. Lock App In Recents
+
+
+---
+
+12. SERVICE HEALTH MONITORING
+
+Purpose
+
+Detect:
+
+killed services
+
+stalled overlays
+
+delayed monitoring
+
+
+
+---
+
+Heartbeat Strategy
+
+Services periodically update:
+
+lastAliveTimestamp
+
+
+---
+
+Failure Flow
+
+Heartbeat Missing
+↓
+Auto Restart Attempt
+↓
+Recovery Warning If Failed
+
+
+---
+
+13. OVERLAY RELIABILITY STRATEGY
+
+Problem
+
+OEMs may:
+
+delay overlays
+
+block overlays
+
+reduce overlay priority
+
+
+
+---
+
+Mitigation
+
+Use:
+
+preloaded Compose overlays
+
+lightweight overlay state
+
+cached UI rendering
+
+
+
+---
+
+Example
+
+Protected App Opens
+↓
+Overlay Cached
+↓
+Overlay Appears Faster
+
+
+---
+
+14. BATTERY OPTIMIZATION STRATEGY
+
+Important Reality
+
+Battery optimization is the #1 reliability problem.
+
+
+---
+
+Detection Logic
+
+Check:
+
+PowerManager.isIgnoringBatteryOptimizations()
+
+
+---
+
+Recovery Example
+
+Battery Optimization Enabled
+↓
+Protection Risk Detected
+↓
+Recovery Card Appears
+
+
+---
+
+Recommended Actions
+
+Guide user to:
+
+unrestricted battery
+
+auto start
+
+disable adaptive battery
+
+
+
+---
+
+15. PERMISSION RESET DETECTION
+
+Problem
+
+Some OEMs silently reset:
+
+overlay permission
+
+accessibility
+
+notifications
+
+
+
+---
+
+Detection Flow
+
+Periodic Permission Validation
+↓
+Mismatch Detected
+↓
+Recovery Event Triggered
+
+
+---
+
+Example
+
+Overlay Revoked
+↓
+Dashboard Warning Appears
+↓
+Recovery Guide Opens
+
+
+---
+
+16. OEM RECOVERY DATABASE
+
+Purpose
+
+Store:
+
+OEM-specific instructions
+
+known issues
+
+recovery actions
+
+
+Locally only.
+
+
+---
+
+Example Structure
+
+OEM Name
+Problem Type
+Recovery Steps
+Priority
+
+
+---
+
+Example Entry
+
+OEM: Xiaomi
+Issue: Service Killing
+Solution:
+- Auto Start
+- No Restrictions
+- Lock In Recents
+
+
+---
+
+17. USER EDUCATION STRATEGY
+
+Important Principle
+
+Do NOT overwhelm users with:
+
+technical jargon
+
+scary warnings
+
+complex instructions
+
+
+
+---
+
+Good Example
+
+"Your device may stop protection in background.
+We recommend enabling unrestricted battery usage."
+
+
+---
+
+Bad Example
+
+"KERNEL BACKGROUND PROCESS FAILURE DETECTED"
+
+
+---
+
+18. OEM TESTING STRATEGY
+
+Required Test Devices
+
+OEM	Priority
+
+Xiaomi	Critical
+Oppo	Critical
+Vivo	Critical
+Samsung	High
+Huawei	High
+Pixel	High
+
+
+
+---
+
+Critical Test Cases
+
+device reboot
+idle overnight
+rapid app switching
+overlay timing
+battery saver enabled
+permission revocation
+
+
+---
+
+19. FAIL-SAFE STRATEGY
+
+Important Rule
+
+If OEM restrictions break protection: the app must:
+
+warn honestly
+
+Never pretend:
+
+protection still works
+
+
+---
+
+Example
+
+Accessibility disabled
+↓
+Security State becomes Critical
+↓
+Protection Reliability Warning shown
+
+
+---
+
+20. FINAL OEM COMPATIBILITY PRINCIPLE
+
+Your OEM system should behave like:
+
+an adaptive Android reliability layer
+
+NOT:
+
+a one-size-fits-all implementation
+
+Because Android OEM behavior is:
+
+fundamentally inconsistent

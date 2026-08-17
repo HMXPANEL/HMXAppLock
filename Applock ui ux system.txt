@@ -1,0 +1,930 @@
+UI/UX SYSTEM — Advanced Android App Lock
+
+Version 1.0
+
+This document defines:
+
+visual identity
+
+design language
+
+UI behavior
+
+animation rules
+
+spacing system
+
+component system
+
+interaction philosophy
+
+
+Goal:
+
+premium
+minimal
+modern
+secure
+smooth
+trustworthy
+
+The app should feel like:
+
+a premium Android OS feature
+
+not a cheap utility app
+
+not a 2018 app lock clone
+
+
+
+---
+
+1. DESIGN PHILOSOPHY
+
+Core Design Identity
+
+The interface should communicate:
+
+Security
+Privacy
+Speed
+Elegance
+Trust
+
+
+---
+
+Design Principles
+
+1. Minimalism
+
+No clutter. No excessive text. No overloaded screens.
+
+
+---
+
+2. Depth
+
+Use:
+
+layered cards
+
+blur
+
+glassmorphism
+
+subtle shadows
+
+
+
+---
+
+3. Motion
+
+Animations should:
+
+guide attention
+
+feel smooth
+
+feel system-native
+
+
+
+---
+
+4. Consistency
+
+Every screen must follow:
+
+same spacing
+
+same typography
+
+same card styles
+
+same animation language
+
+
+
+---
+
+2. VISUAL STYLE
+
+Style Direction
+
+Modern Android 14
++
+Glassmorphism
++
+Neon gradients
++
+AMOLED dark UI
+
+
+---
+
+Inspirations
+
+Use inspiration from:
+
+Nothing OS
+
+Proton apps
+
+Arc Browser
+
+Bitwarden
+
+Samsung OneUI
+
+Material You
+
+
+
+---
+
+UI Mood
+
+The app should feel:
+
+futuristic
+
+premium
+
+calm
+
+privacy-focused
+
+
+NOT:
+
+gamer UI
+
+crypto dashboard
+
+flashy RGB chaos
+
+
+
+---
+
+3. COLOR SYSTEM
+
+Primary Themes
+
+Dark Theme (Default)
+
+Background
+
+#0B0B0F
+
+Surface
+
+#13131A
+
+Card Background
+
+#1A1B22
+
+
+---
+
+AMOLED Theme
+
+Pure black backgrounds:
+
+#000000
+
+for battery optimization.
+
+
+---
+
+Accent Colors
+
+Primary Accent
+
+Electric Purple
+
+Secondary Options
+
+Cyan
+
+Emerald
+
+Blue
+
+Crimson
+
+
+
+---
+
+Gradient Style
+
+Use soft gradients:
+
+purple → blue
+cyan → teal
+
+Avoid:
+
+rainbow gradients
+
+harsh contrast
+
+
+
+---
+
+4. TYPOGRAPHY SYSTEM
+
+Font Style
+
+Use:
+
+Inter
+
+or:
+
+SF Pro style typography
+
+
+---
+
+Typography Hierarchy
+
+Type	Usage
+
+Display Large	splash titles
+Headline	section headers
+Title	cards
+Body	descriptions
+Label	buttons
+
+
+
+---
+
+Typography Rules
+
+Use:
+
+medium weight headers
+
+clean spacing
+
+readable line height
+
+
+Avoid:
+
+bold everywhere
+
+tiny text
+
+compressed spacing
+
+
+
+---
+
+5. SPACING SYSTEM
+
+Spacing Scale
+
+Size	Value
+
+XS	4dp
+S	8dp
+M	16dp
+L	24dp
+XL	32dp
+
+
+
+---
+
+Layout Rules
+
+Screen Padding
+
+Default:
+
+16dp–24dp
+
+
+---
+
+Card Spacing
+
+Use:
+
+12dp–16dp
+
+
+---
+
+6. CARD SYSTEM
+
+Card Style
+
+Use:
+
+rounded corners
+
+blur background
+
+soft borders
+
+glow highlights
+
+
+
+---
+
+Card Radius
+
+Default:
+
+20dp–28dp
+
+
+---
+
+Card Shadows
+
+Soft shadows only.
+
+Avoid:
+
+harsh elevation
+
+heavy black shadows
+
+
+
+---
+
+Glassmorphism Rules
+
+Use:
+
+semi-transparent surfaces
+
+blur effects
+
+subtle borders
+
+
+Avoid:
+
+overusing blur
+
+unreadable transparency
+
+
+
+---
+
+7. BUTTON SYSTEM
+
+Primary Buttons
+
+Style:
+
+gradient background
+
+rounded edges
+
+glow effect
+
+
+
+---
+
+Secondary Buttons
+
+Style:
+
+outlined
+
+subtle glow
+
+transparent background
+
+
+
+---
+
+Interaction Rules
+
+Buttons should:
+
+animate on press
+
+scale slightly
+
+provide haptic feedback
+
+
+
+---
+
+8. ICON SYSTEM
+
+Icon Style
+
+Use:
+
+outlined icons
+
+rounded icons
+
+modern Material icons
+
+
+
+---
+
+Avoid
+
+2D flat cheap icons
+
+skeuomorphic icons
+
+inconsistent icon packs
+
+
+
+---
+
+Icon Animation
+
+Important icons may:
+
+glow softly
+
+pulse subtly
+
+animate transitions
+
+
+
+---
+
+9. NAVIGATION SYSTEM
+
+Bottom Navigation
+
+Use:
+
+floating navigation bar
+
+blur background
+
+animated active indicator
+
+
+
+---
+
+Tabs
+
+Home
+Vault
+Security
+Themes
+Settings
+
+
+---
+
+Navigation Behavior
+
+Use:
+
+smooth transitions
+
+shared animations
+
+gesture-friendly movement
+
+
+
+---
+
+10. ANIMATION SYSTEM
+
+Animation Philosophy
+
+Animations should:
+
+feel physical
+
+feel fluid
+
+feel intentional
+
+
+
+---
+
+Animation Types
+
+Screen Transitions
+
+Use:
+
+fade
+
+slide
+
+scale transitions
+
+
+
+---
+
+Card Animations
+
+Use:
+
+subtle hover motion
+
+spring physics
+
+glow animations
+
+
+
+---
+
+Lock Screen Animations
+
+Use:
+
+keypad ripple
+
+biometric pulse
+
+smooth unlock transitions
+
+
+
+---
+
+Animation Timing
+
+Type	Duration
+
+Micro interaction	100–200ms
+Navigation	250–350ms
+Large transition	400–500ms
+
+
+
+---
+
+11. DASHBOARD DESIGN
+
+Dashboard Layout
+
+Security Score
+↓
+Quick Actions
+↓
+Locked Apps
+↓
+Vault Status
+↓
+Intruder Alerts
+
+
+---
+
+Dashboard Style
+
+Use:
+
+large hero cards
+
+animated gradients
+
+clean information hierarchy
+
+
+
+---
+
+Quick Actions
+
+Examples:
+
+Lock All
+
+Open Vault
+
+Panic Lock
+
+Stealth Mode
+
+
+
+---
+
+12. LOCK SCREEN DESIGN
+
+Lock Screen Feel
+
+Should feel:
+
+premium
+
+responsive
+
+system-native
+
+
+
+---
+
+Lock Screen Components
+
+Elements
+
+app icon
+
+app name
+
+animated keypad
+
+fingerprint prompt
+
+failed attempt indicator
+
+
+
+---
+
+PIN Pad Design
+
+Use:
+
+circular buttons
+
+glow feedback
+
+smooth tap animation
+
+
+
+---
+
+13. VAULT UI
+
+Vault Design Goals
+
+Should feel:
+
+secure
+
+minimal
+
+elegant
+
+
+
+---
+
+Vault Layout
+
+Sections
+
+Photos
+Videos
+Documents
+Audio
+
+
+---
+
+Media Grid
+
+Use:
+
+adaptive grid
+
+blurred thumbnails
+
+smooth loading
+
+
+
+---
+
+Hidden Mode
+
+Optionally blur previews until authentication.
+
+
+---
+
+14. INTRUDER LOG UI
+
+Intruder Cards
+
+Each card shows:
+
+intruder image
+
+timestamp
+
+app targeted
+
+failed attempts
+
+
+
+---
+
+Style
+
+Use:
+
+warning accents
+
+subtle red glow
+
+timeline layout
+
+
+
+---
+
+15. SETTINGS UI
+
+Settings Layout
+
+Use:
+
+grouped sections
+
+large toggles
+
+descriptive subtitles
+
+
+
+---
+
+Settings Categories
+
+General
+Security
+Vault
+Themes
+Advanced
+About
+
+
+---
+
+16. THEMING SYSTEM
+
+Dynamic Themes
+
+Allow:
+
+accent color switching
+
+AMOLED mode
+
+blur intensity adjustment
+
+
+
+---
+
+Theme Behavior
+
+Theme changes should animate smoothly.
+
+
+---
+
+17. RESPONSIVE DESIGN
+
+Support
+
+Must support:
+
+phones
+
+tablets
+
+foldables
+
+
+
+---
+
+Layout Adaptation
+
+Use:
+
+adaptive grids
+
+responsive spacing
+
+dynamic layouts
+
+
+
+---
+
+18. ACCESSIBILITY
+
+Accessibility Features
+
+Support:
+
+dynamic font scaling
+
+screen readers
+
+high contrast mode
+
+
+
+---
+
+Interaction Accessibility
+
+Ensure:
+
+large tap targets
+
+readable contrast
+
+clear feedback
+
+
+
+---
+
+19. UX PRINCIPLES
+
+Core UX Rules
+
+Fast
+
+Reduce taps.
+
+Calm
+
+No aggressive popups.
+
+Transparent
+
+Explain permissions clearly.
+
+Reliable
+
+Security actions must feel instant.
+
+Premium
+
+Every interaction should feel polished.
+
+
+---
+
+20. UI COMPONENT LIBRARY
+
+Reusable Components
+
+GlassCard
+GlowButton
+AnimatedToggle
+SecurityStatusCard
+VaultPreviewCard
+IntruderAlertCard
+GradientFAB
+AnimatedPINPad
+BiometricPromptCard
+
+
+---
+
+21. FINAL UI DIRECTION
+
+The app should visually feel like:
+
+A premium Android privacy OS layer
+
+NOT:
+
+a generic Play Store utility app

@@ -1,0 +1,837 @@
+GITHUB ACTIONS WORKFLOW PLAN
+
+Advanced Android App Lock
+Version 1.0
+
+This document defines:
+
+CI/CD workflow architecture
+
+APK build automation
+
+branch strategy
+
+artifact strategy
+
+testing pipeline
+
+release pipeline
+
+signing strategy
+
+debug workflow system
+
+
+Goal:
+
+fast
+stable
+repeatable
+cloud-based Android builds
+
+Important principle:
+
+GitHub Actions should automate development,
+NOT create unnecessary complexity.
+
+
+---
+
+1. WORKFLOW PHILOSOPHY
+
+Core Goals
+
+GitHub Actions should:
+
+auto-build APKs
+
+validate project stability
+
+speed up testing
+
+reduce manual work
+
+support multi-device testing
+
+
+
+---
+
+Important Reality
+
+For THIS app:
+
+real-device testing matters more than complex CI/CD
+
+Because:
+
+overlays
+
+accessibility
+
+OEM behavior
+
+battery optimization
+
+
+cannot be fully validated in emulators.
+
+
+---
+
+2. CI/CD ARCHITECTURE OVERVIEW
+
+Pipeline Structure
+
+Code Push
+↓
+GitHub Action Triggered
+↓
+Gradle Build Starts
+↓
+APK Generated
+↓
+Artifact Uploaded
+↓
+Install On Device
+↓
+Real Device Testing
+
+
+---
+
+3. REPOSITORY STRUCTURE
+
+Recommended Structure
+
+.github/
+└── workflows/
+    ├── debug-build.yml
+    ├── release-build.yml
+    ├── lint.yml
+    ├── test.yml
+    └── nightly-build.yml
+
+
+---
+
+Workflow Responsibilities
+
+Workflow	Purpose
+
+debug-build	generate debug APK
+release-build	signed release build
+lint	code quality
+test	unit/integration tests
+nightly-build	automated daily builds
+
+
+
+---
+
+4. FIRST WORKFLOW STRATEGY
+
+IMPORTANT
+
+Start with ONLY:
+
+debug-build.yml
+
+
+---
+
+Why?
+
+Because early-stage priorities are:
+
+rapid iteration
+
+reliable builds
+
+real-device testing
+
+
+NOT:
+
+Play Store automation
+
+production release pipelines
+
+
+
+---
+
+5. DEBUG BUILD WORKFLOW
+
+Purpose
+
+Automatically generate:
+
+debug APK
+
+after code push.
+
+
+---
+
+Trigger Strategy
+
+Recommended Trigger
+
+push to develop
+
+
+---
+
+Example Flow
+
+Push Code
+↓
+GitHub Action Starts
+↓
+Gradle Builds Debug APK
+↓
+APK Uploaded As Artifact
+↓
+Download APK
+↓
+Install On Device
+
+
+---
+
+Workflow Steps
+
+Step 1
+
+Checkout repository.
+
+
+---
+
+Step 2
+
+Setup JDK.
+
+Recommended:
+
+JDK 17
+
+
+---
+
+Step 3
+
+Setup Gradle cache.
+
+
+---
+
+Step 4
+
+Build:
+
+assembleDebug
+
+
+---
+
+Step 5
+
+Upload APK artifact.
+
+
+---
+
+Example Artifact
+
+app-debug.apk
+
+
+---
+
+6. RELEASE BUILD WORKFLOW
+
+Purpose
+
+Generate:
+
+signed release APK
+
+
+---
+
+Important
+
+DO NOT implement this first.
+
+Add later after:
+
+overlay stable
+
+app lock reliable
+
+testing completed
+
+
+
+---
+
+Release Flow
+
+Tag Release
+↓
+GitHub Action Starts
+↓
+Release APK Signed
+↓
+GitHub Release Created
+
+
+---
+
+Required Security
+
+Use:
+
+GitHub Secrets
+
+for:
+
+keystore password
+
+signing password
+
+alias password
+
+
+
+---
+
+NEVER Commit
+
+Never upload:
+
+keystore files
+
+passwords
+
+signing configs
+
+
+to repository.
+
+
+---
+
+7. BRANCH STRATEGY
+
+Recommended Branches
+
+main
+develop
+feature/*
+
+
+---
+
+Branch Roles
+
+Branch	Purpose
+
+main	stable builds
+develop	active integration
+feature/*	isolated development
+
+
+
+---
+
+Example Flow
+
+Create feature/overlay-engine
+↓
+Develop Overlay System
+↓
+Push Changes
+↓
+Debug APK Built Automatically
+
+
+---
+
+8. FEATURE DEVELOPMENT WORKFLOW
+
+Recommended Flow
+
+Create Feature Branch
+↓
+Implement Feature
+↓
+Push To GitHub
+↓
+Debug APK Generated
+↓
+Install On Real Device
+↓
+Validate Feature
+↓
+Merge Into develop
+
+
+---
+
+9. REAL DEVICE TESTING STRATEGY
+
+Important Reality
+
+This app MUST be tested on:
+
+physical devices
+
+multiple OEMs
+
+
+
+---
+
+Emulator Limitations
+
+Emulators are unreliable for:
+
+overlays
+
+OEM behavior
+
+accessibility timing
+
+battery optimization
+
+
+
+---
+
+Required Test Devices
+
+Priority:
+
+1. Xiaomi
+
+
+2. Samsung
+
+
+3. Oppo/Vivo
+
+
+4. Pixel
+
+
+
+
+---
+
+Example
+
+Push Overlay Optimization
+↓
+APK Generated
+↓
+Install On Xiaomi
+↓
+Test Overlay Speed
+
+
+---
+
+10. APK ARTIFACT STRATEGY
+
+Purpose
+
+Store generated APKs.
+
+
+---
+
+Artifact Naming
+
+Recommended:
+
+hmxshield-debug.apk
+
+
+---
+
+Artifact Retention
+
+Suggested:
+
+7 days
+
+for debug builds.
+
+
+---
+
+Example Flow
+
+Workflow Completes
+↓
+APK Uploaded
+↓
+Download From GitHub Actions
+
+
+---
+
+11. BUILD PERFORMANCE STRATEGY
+
+Goal
+
+Reduce:
+
+build time
+
+dependency downloads
+
+Gradle overhead
+
+
+
+---
+
+Optimization Techniques
+
+Use:
+
+Gradle caching
+
+dependency caching
+
+incremental builds
+
+
+
+---
+
+Example
+
+First Build: 10 min
+↓
+Cached Build: 2 min
+
+
+---
+
+12. LINT WORKFLOW
+
+Purpose
+
+Catch:
+
+bad code
+
+Compose mistakes
+
+resource issues
+
+
+
+---
+
+Trigger
+
+pull_request
+
+
+---
+
+Example Flow
+
+PR Opened
+↓
+Lint Runs
+↓
+Issue Detected
+↓
+Merge Blocked
+
+
+---
+
+13. TEST WORKFLOW
+
+Purpose
+
+Validate:
+
+use cases
+
+repositories
+
+validators
+
+
+
+---
+
+Types
+
+Test	Purpose
+
+Unit	business logic
+Integration	database/repositories
+UI	Compose behavior
+
+
+
+---
+
+Example
+
+Push Session Manager Update
+↓
+Tests Run Automatically
+↓
+Session Expiration Verified
+
+
+---
+
+14. NIGHTLY BUILD STRATEGY
+
+Purpose
+
+Generate:
+
+daily validation builds
+
+
+---
+
+Why Useful?
+
+Detect:
+
+dependency breakage
+
+Gradle failures
+
+integration problems
+
+
+
+---
+
+Example
+
+Nightly Build Runs
+↓
+Dependency Conflict Detected
+↓
+Issue Fixed Before Release
+
+
+---
+
+15. RELEASE STRATEGY
+
+Suggested Release Stages
+
+Stage	Purpose
+
+debug	active development
+beta	limited testing
+stable	public release
+
+
+
+---
+
+Recommended Early Flow
+
+debug only
+
+initially.
+
+
+---
+
+16. APK DISTRIBUTION STRATEGY
+
+Since No Play Store
+
+Distribution methods:
+
+GitHub Releases
+
+direct APK
+
+Telegram
+
+Discord
+
+website
+
+
+
+---
+
+Example Flow
+
+Push Stable Build
+↓
+Release APK Generated
+↓
+Upload To GitHub Release
+↓
+Users Download APK
+
+
+---
+
+17. SECURITY STRATEGY
+
+Important Rule
+
+GitHub repository must NEVER expose:
+
+keystore
+
+passwords
+
+secrets
+
+
+
+---
+
+Use GitHub Secrets
+
+Store:
+
+KEYSTORE_PASSWORD
+KEY_ALIAS
+KEY_PASSWORD
+
+securely.
+
+
+---
+
+Example Flow
+
+Release Workflow Starts
+↓
+Secrets Loaded Temporarily
+↓
+APK Signed Securely
+
+
+---
+
+18. VERSIONING STRATEGY
+
+Recommended Versioning
+
+Use:
+
+semantic versioning
+
+
+---
+
+Example
+
+1.0.0
+1.1.0
+1.2.0
+
+
+---
+
+Suggested Meaning
+
+Version Type	Meaning
+
+Major	architecture/features
+Minor	improvements
+Patch	bug fixes
+
+
+
+---
+
+19. FAIL-SAFE STRATEGY
+
+Important Principle
+
+If workflow fails:
+
+failure should be visible
+
+APK should not be distributed silently
+
+
+
+---
+
+Example
+
+Build Failure
+↓
+Artifact Not Generated
+↓
+Developer Alerted
+
+
+---
+
+20. LONG-TERM WORKFLOW EVOLUTION
+
+Early Stage
+
+Focus:
+
+debug APK automation
+
+
+---
+
+Mid Stage
+
+Add:
+
+lint
+
+tests
+
+beta releases
+
+
+
+---
+
+Late Stage
+
+Add:
+
+signed releases
+
+changelog generation
+
+rollback support
+
+
+
+---
+
+21. FINAL GITHUB ACTIONS PRINCIPLE
+
+Your workflow system should behave like:
+
+a lightweight cloud Android build infrastructure
+
+NOT:
+
+an overly complex enterprise CI/CD maze

@@ -1,0 +1,936 @@
+DESIGN SYSTEM & COMPONENT SPEC
+
+Advanced Android App Lock
+Version 1.0
+
+This document defines:
+
+design tokens
+
+reusable Compose components
+
+interaction patterns
+
+motion system
+
+visual consistency rules
+
+component behavior contracts
+
+
+Goal:
+
+consistent
+scalable
+premium
+production-ready UI system
+
+
+---
+
+1. DESIGN SYSTEM PHILOSOPHY
+
+The UI system must feel:
+
+minimal
+secure
+fluid
+futuristic
+trustworthy
+
+The design system should:
+
+reduce UI inconsistency
+
+accelerate Compose development
+
+improve scalability
+
+help AI generate predictable UI
+
+
+
+---
+
+2. DESIGN TOKENS
+
+Color Tokens
+
+Dark Theme
+
+Token	Value
+
+bgPrimary	#0B0B0F
+bgSecondary	#13131A
+cardBackground	#1A1B22
+borderColor	#2A2C35
+textPrimary	#FFFFFF
+textSecondary	#B8BCC8
+
+
+
+---
+
+Accent Tokens
+
+Token	Value
+
+accentPurple	#8B5CF6
+accentBlue	#3B82F6
+accentCyan	#06B6D4
+accentEmerald	#10B981
+accentRed	#EF4444
+
+
+
+---
+
+Gradient Tokens
+
+Primary Gradient
+
+#8B5CF6 → #3B82F6
+
+
+---
+
+Warning Gradient
+
+#EF4444 → #F97316
+
+
+---
+
+3. TYPOGRAPHY TOKENS
+
+Font Family
+
+Inter
+
+
+---
+
+Typography Scale
+
+Token	Size
+
+displayLarge	36sp
+headline	28sp
+title	20sp
+body	16sp
+caption	13sp
+
+
+
+---
+
+Typography Rules
+
+Headlines
+
+medium/semi-bold
+
+spacious line height
+
+
+
+---
+
+Body Text
+
+readable contrast
+
+avoid dense paragraphs
+
+
+
+---
+
+4. SPACING TOKENS
+
+Token	Value
+
+xs	4dp
+sm	8dp
+md	16dp
+lg	24dp
+xl	32dp
+
+
+
+---
+
+Layout Rules
+
+Screen Padding
+
+16dp–24dp
+
+
+---
+
+Section Gap
+
+20dp
+
+
+---
+
+5. RADIUS TOKENS
+
+Token	Value
+
+smallRadius	12dp
+mediumRadius	20dp
+largeRadius	28dp
+fullRadius	999dp
+
+
+
+---
+
+6. SHADOW SYSTEM
+
+Shadow Rules
+
+Use:
+
+soft shadows
+
+subtle elevation
+
+low opacity blur
+
+
+Avoid:
+
+heavy black shadows
+
+hard edges
+
+
+
+---
+
+Example Shadow
+
+Blur: 24
+Opacity: 12%
+OffsetY: 8
+
+
+---
+
+7. GLASSMORPHISM RULES
+
+Glass Cards
+
+Use
+
+translucent surfaces
+
+blur background
+
+thin borders
+
+
+
+---
+
+Card Opacity
+
+85–92%
+
+
+---
+
+Border Style
+
+1dp semi-transparent border
+
+
+---
+
+8. MOTION SYSTEM
+
+Animation Philosophy
+
+Animations must:
+
+feel responsive
+
+feel intentional
+
+avoid visual overload
+
+
+
+---
+
+Animation Durations
+
+Type	Duration
+
+Micro	120ms
+Standard	250ms
+Large	400ms
+
+
+
+---
+
+Animation Curves
+
+Use:
+
+spring
+
+ease-out
+
+
+Avoid:
+
+linear motion everywhere
+
+
+
+---
+
+Motion Examples
+
+Button Press
+
+Scale 1.0 → 0.96 → 1.0
+
+
+---
+
+Screen Transition
+
+Fade + Slide
+
+
+---
+
+9. COMPONENT LIBRARY
+
+CORE COMPONENTS
+
+
+---
+
+9.1 GlassCard
+
+Purpose
+
+Main reusable card container.
+
+
+---
+
+Features
+
+blur effect
+
+rounded corners
+
+soft border
+
+animated glow
+
+
+
+---
+
+Props
+
+GlassCard(
+    modifier,
+    glowColor,
+    onClick,
+    content
+)
+
+
+---
+
+Behavior
+
+subtle hover glow
+
+press animation
+
+adaptive height
+
+
+
+---
+
+Example Usage
+
+Dashboard security cards
+Vault preview cards
+Intruder cards
+
+
+---
+
+9.2 GlowButton
+
+Purpose
+
+Primary CTA button.
+
+
+---
+
+Features
+
+animated gradient
+
+glow shadow
+
+ripple feedback
+
+haptic feedback
+
+
+
+---
+
+Variants
+
+Variant	Usage
+
+Primary	important actions
+Secondary	lower priority
+Danger	delete/remove
+
+
+
+---
+
+Example
+
+GlowButton(
+    text = "Lock Apps",
+    icon = Lock,
+    onClick = {}
+)
+
+
+---
+
+Interaction Example
+
+Tap
+↓
+Scale Animation
+↓
+Glow Intensifies
+↓
+Haptic Feedback
+
+
+---
+
+9.3 AnimatedToggle
+
+Purpose
+
+Security toggles.
+
+
+---
+
+Features
+
+animated thumb
+
+glowing active state
+
+smooth transition
+
+
+
+---
+
+Example Usage
+
+Stealth Mode
+Intruder Detection
+Fingerprint Unlock
+
+
+---
+
+9.4 SecurityStatusCard
+
+Purpose
+
+Display protection status.
+
+
+---
+
+Content
+
+Protection Active
+Apps Locked
+Risk Warnings
+Permission State
+
+
+---
+
+Example
+
+Security Score: 92%
+Overlay Active
+Accessibility Enabled
+
+
+---
+
+9.5 VaultPreviewCard
+
+Purpose
+
+Preview secure vault sections.
+
+
+---
+
+Features
+
+blurred thumbnails
+
+adaptive grid
+
+lock indicators
+
+
+
+---
+
+Example
+
+Photos
+Videos
+Documents
+
+
+---
+
+9.6 IntruderAlertCard
+
+Purpose
+
+Display intruder attempts.
+
+
+---
+
+Features
+
+intruder image
+
+warning accent
+
+timestamp
+
+app targeted
+
+
+
+---
+
+Style
+
+Use:
+
+subtle red glow
+warning border
+
+
+---
+
+9.7 AnimatedPINPad
+
+Purpose
+
+Lock screen keypad.
+
+
+---
+
+Features
+
+ripple touch
+
+glow feedback
+
+smooth number transitions
+
+haptic feedback
+
+
+
+---
+
+PIN Interaction Example
+
+Tap Number
+↓
+Ripple Animation
+↓
+Digit Appears
+↓
+Pulse Feedback
+
+
+---
+
+9.8 BiometricPromptCard
+
+Purpose
+
+Fingerprint unlock prompt.
+
+
+---
+
+Features
+
+pulse animation
+
+glow ring
+
+success animation
+
+failure shake animation
+
+
+
+---
+
+Success Example
+
+Fingerprint Accepted
+↓
+Green Glow
+↓
+Unlock Transition
+
+
+---
+
+10. NAVIGATION COMPONENTS
+
+Floating Bottom Navigation
+
+Features
+
+blur background
+
+floating effect
+
+animated active indicator
+
+
+
+---
+
+Active Tab Behavior
+
+Scale Up
+↓
+Glow Animation
+↓
+Label Fade In
+
+
+---
+
+11. SCREEN TEMPLATES
+
+Dashboard Template
+
+Header
+↓
+Security Score
+↓
+Quick Actions
+↓
+Locked Apps
+↓
+Vault Preview
+↓
+Intruder Alerts
+
+
+---
+
+Settings Template
+
+Category Header
+↓
+Grouped Settings Cards
+↓
+Toggles
+↓
+Action Buttons
+
+
+---
+
+Vault Template
+
+Search
+↓
+Category Tabs
+↓
+Media Grid
+↓
+Floating Action Button
+
+
+---
+
+12. INTERACTION RULES
+
+Haptics
+
+Use haptic feedback for:
+
+unlock success
+
+toggle changes
+
+destructive actions
+
+
+
+---
+
+Gesture Rules
+
+Support:
+
+swipe gestures
+
+pull-to-refresh
+
+drag selection (vault)
+
+
+
+---
+
+Touch Targets
+
+Minimum:
+
+48dp
+
+
+---
+
+13. LOADING STATES
+
+Skeleton Loaders
+
+Use:
+
+shimmer effect
+
+blurred placeholders
+
+
+Avoid:
+
+empty white screens
+
+
+
+---
+
+Example
+
+Dashboard loading cards
+Vault thumbnail placeholders
+
+
+---
+
+14. ERROR STATES
+
+Error UI Principles
+
+Errors should:
+
+feel calm
+
+explain clearly
+
+provide recovery actions
+
+
+
+---
+
+Example
+
+Overlay Permission Missing
+↓
+Explain Problem
+↓
+Open Settings Button
+
+
+---
+
+15. EMPTY STATES
+
+Empty State Design
+
+Use:
+
+illustrations
+
+subtle animations
+
+onboarding hints
+
+
+
+---
+
+Example
+
+"No locked apps yet"
+↓
+"Protect your privacy"
+↓
+"Add Apps" button
+
+
+---
+
+16. RESPONSIVE RULES
+
+Device Support
+
+Must support:
+
+phones
+
+tablets
+
+foldables
+
+
+
+---
+
+Adaptive Layout Rules
+
+Small Devices
+
+Single-column layout.
+
+
+---
+
+Tablets
+
+Two-column dashboard.
+
+
+---
+
+17. DARK MODE RULES
+
+Dark mode is:
+
+primary experience
+
+
+---
+
+AMOLED Rules
+
+Use:
+
+true black backgrounds
+
+reduced glow intensity
+
+
+
+---
+
+18. ACCESSIBILITY RULES
+
+Accessibility Requirements
+
+Support:
+
+screen readers
+
+scalable fonts
+
+high contrast mode
+
+
+
+---
+
+Accessibility Contrast
+
+All text:
+
+minimum AA contrast
+
+
+---
+
+19. COMPOSE IMPLEMENTATION STRATEGY
+
+UI Package Structure
+
+ui/
+├── components/
+├── screens/
+├── animations/
+├── theme/
+├── navigation/
+
+
+---
+
+Component Strategy
+
+Each component should include:
+
+reusable API
+
+preview composables
+
+animation handling
+
+dark/light variants
+
+
+
+---
+
+20. FINAL DESIGN SYSTEM GOAL
+
+The final UI should feel like:
+
+a premium Android privacy operating layer
+
+NOT:
+
+a generic Play Store app locker

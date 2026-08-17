@@ -1,0 +1,992 @@
+SOFTWARE ARCHITECTURE — Advanced Android App Lock
+
+Version 1.0
+
+This document defines:
+
+project architecture
+
+module structure
+
+service communication
+
+state management
+
+dependency flow
+
+security boundaries
+
+scalability strategy
+
+
+Goal:
+
+scalable
+maintainable
+secure
+modular
+stable
+
+
+---
+
+1. ARCHITECTURE PHILOSOPHY
+
+The application must be:
+
+modular
+
+testable
+
+offline-first
+
+privacy-first
+
+scalable
+
+resilient to Android restrictions
+
+
+
+---
+
+Core Principles
+
+1. Separation of Concerns
+
+UI should NOT contain:
+
+business logic
+
+encryption logic
+
+service logic
+
+
+
+---
+
+2. Single Source of Truth
+
+All state flows from:
+
+Repository
+↓
+UseCase
+↓
+ViewModel
+↓
+UI
+
+
+---
+
+3. Local-Only Security
+
+Sensitive data never leaves device.
+
+
+---
+
+4. Event-Driven System
+
+Services communicate through:
+
+flows
+
+state streams
+
+events
+
+
+NOT:
+
+tightly coupled classes
+
+
+
+---
+
+2. HIGH-LEVEL ARCHITECTURE
+
+Architecture Style
+
+Use:
+
+Clean Architecture
++
+MVVM
++
+Modular Architecture
+
+
+---
+
+High-Level Layers
+
+Presentation Layer
+↓
+Domain Layer
+↓
+Data Layer
+↓
+System Layer
+
+
+---
+
+3. PRESENTATION LAYER
+
+Responsibilities
+
+Handles:
+
+Compose UI
+
+animations
+
+navigation
+
+UI state rendering
+
+user interactions
+
+
+
+---
+
+Structure
+
+ui/
+├── screens/
+├── components/
+├── navigation/
+├── animations/
+├── theme/
+
+
+---
+
+Rules
+
+UI layer:
+
+never directly accesses database
+
+never directly accesses services
+
+never performs encryption
+
+
+
+---
+
+State Management
+
+Use:
+
+ViewModel
+
+StateFlow
+
+immutable UI states
+
+
+
+---
+
+Example Flow
+
+User Action
+↓
+ViewModel Event
+↓
+UseCase
+↓
+Repository
+↓
+Result
+↓
+UI State Update
+
+
+---
+
+4. DOMAIN LAYER
+
+Responsibilities
+
+Contains:
+
+business logic
+
+validation rules
+
+security rules
+
+app lock logic
+
+vault rules
+
+
+
+---
+
+Structure
+
+domain/
+├── usecases/
+├── models/
+├── validators/
+├── security/
+
+
+---
+
+Use Case Examples
+
+Security
+
+LockAppUseCase
+
+VerifyPinUseCase
+
+UnlockSessionUseCase
+
+
+
+---
+
+Vault
+
+EncryptFileUseCase
+
+ImportVaultFileUseCase
+
+DeleteVaultFileUseCase
+
+
+
+---
+
+Domain Rules
+
+Domain layer:
+
+independent from Android UI
+
+independent from Compose
+
+independent from Room
+
+
+
+---
+
+5. DATA LAYER
+
+Responsibilities
+
+Handles:
+
+local storage
+
+repositories
+
+encryption
+
+caching
+
+settings persistence
+
+
+
+---
+
+Structure
+
+data/
+├── repositories/
+├── local/
+├── datastore/
+├── encryption/
+├── mappers/
+
+
+---
+
+Repository Pattern
+
+Repositories act as:
+
+single source of truth
+
+
+---
+
+Example
+
+UI
+↓
+ViewModel
+↓
+UseCase
+↓
+Repository
+↓
+Room / DataStore / Encryption
+
+
+---
+
+6. SYSTEM LAYER
+
+Responsibilities
+
+Handles Android system integration.
+
+
+---
+
+Services
+
+system/
+├── accessibility/
+├── overlay/
+├── biometric/
+├── notifications/
+├── monitoring/
+
+
+---
+
+Key Services
+
+Accessibility Service
+
+Detect foreground app changes.
+
+
+---
+
+Overlay Service
+
+Display lock overlay instantly.
+
+
+---
+
+Notification Service
+
+Security alerts.
+
+
+---
+
+Biometric Service
+
+Fingerprint handling.
+
+
+---
+
+Rules
+
+System layer:
+
+isolated from UI
+
+communicates through repositories/events
+
+
+
+---
+
+7. MODULE ARCHITECTURE
+
+Project Modules
+
+app/
+core/
+security/
+vault/
+intruder/
+dashboard/
+settings/
+theme/
+navigation/
+system/
+
+
+---
+
+Module Responsibilities
+
+Module	Responsibility
+
+core	utilities/shared
+security	app lock engine
+vault	encrypted vault
+intruder	failed unlock tracking
+dashboard	home logic
+theme	design system
+system	Android integrations
+
+
+
+---
+
+8. SECURITY ARCHITECTURE
+
+Security Layers
+
+Authentication Layer
+↓
+Session Layer
+↓
+Overlay Protection Layer
+↓
+Encrypted Storage Layer
+
+
+---
+
+Authentication Layer
+
+Supports:
+
+PIN
+
+Pattern
+
+Password
+
+Fingerprint
+
+
+
+---
+
+Session Management
+
+Temporary unlock sessions:
+
+memory-only
+
+auto-expiring
+
+app-specific
+
+
+
+---
+
+Overlay Protection
+
+Overlay must:
+
+block touch interaction
+
+prevent app visibility
+
+relock instantly when needed
+
+
+
+---
+
+Encryption Layer
+
+Use:
+
+Android Keystore
+
+AES encryption
+
+
+Protect:
+
+vault files
+
+preferences
+
+credentials
+
+
+
+---
+
+9. APP LOCK ENGINE ARCHITECTURE
+
+Detection Flow
+
+Accessibility Event
+↓
+Foreground App Monitor
+↓
+Protection Check
+↓
+Launch Overlay
+↓
+Authenticate
+↓
+Grant Session
+
+
+---
+
+Monitoring Engine
+
+Primary
+
+AccessibilityService
+
+Secondary
+
+UsageStats fallback
+
+
+---
+
+Lock State Manager
+
+Tracks:
+
+unlocked apps
+
+relock timers
+
+current foreground app
+
+active sessions
+
+
+
+---
+
+10. OVERLAY SYSTEM ARCHITECTURE
+
+Overlay Goals
+
+Must:
+
+appear instantly
+
+feel native
+
+minimize flicker
+
+
+
+---
+
+Overlay Stack
+
+Foreground Detection
+↓
+Overlay Window Manager
+↓
+Compose Lock UI
+↓
+Authentication Engine
+
+
+---
+
+Overlay Optimization
+
+Use:
+
+preloaded Compose overlay
+
+cached UI states
+
+lightweight rendering
+
+
+
+---
+
+11. VAULT ARCHITECTURE
+
+Vault Pipeline
+
+Import File
+↓
+Encrypt
+↓
+Move Securely
+↓
+Store Metadata
+↓
+Generate Secure Thumbnail
+
+
+---
+
+Vault Storage Rules
+
+Original Files
+
+Optional:
+
+securely delete original
+
+
+
+---
+
+Secure Storage
+
+Store:
+
+encrypted binaries
+
+isolated app directory
+
+hidden media indexing
+
+
+
+---
+
+12. DATABASE ARCHITECTURE
+
+Database Engine
+
+Use:
+
+Room Database
+
+
+---
+
+Core Tables
+
+LockedApps
+VaultFiles
+IntruderLogs
+SecuritySettings
+UnlockSessions
+
+
+---
+
+DAO Strategy
+
+Each feature module owns:
+
+its DAO
+
+repository
+
+entities
+
+
+
+---
+
+13. STATE MANAGEMENT ARCHITECTURE
+
+State Pattern
+
+Use:
+
+Single immutable UI state
+
+
+---
+
+Example
+
+data class DashboardUiState(
+    val lockedApps: List<App>,
+    val vaultItems: Int,
+    val securityScore: Int,
+    val loading: Boolean
+)
+
+
+---
+
+Event Flow
+
+UI Event
+↓
+ViewModel
+↓
+UseCase
+↓
+Repository
+↓
+State Update
+
+
+---
+
+14. DEPENDENCY INJECTION
+
+DI Framework
+
+Use:
+
+Hilt
+
+
+---
+
+Injectables
+
+repositories
+
+use cases
+
+encryption managers
+
+services
+
+database
+
+
+
+---
+
+Benefits
+
+scalability
+
+testability
+
+lifecycle management
+
+
+
+---
+
+15. BACKGROUND EXECUTION ARCHITECTURE
+
+Background Components
+
+Foreground Monitoring
+Overlay Service
+Intruder Detection
+Session Cleanup
+
+
+---
+
+Lifecycle Strategy
+
+Use:
+
+lifecycle-aware services
+
+foreground services only when needed
+
+
+
+---
+
+Battery Optimization
+
+Goals:
+
+minimize wakeups
+
+reduce polling
+
+event-driven monitoring
+
+
+
+---
+
+16. ERROR HANDLING ARCHITECTURE
+
+Error Layers
+
+UI Errors
+↓
+Domain Errors
+↓
+System Errors
+
+
+---
+
+Handling Strategy
+
+Use:
+
+centralized error manager
+
+sealed error classes
+
+retry flows
+
+
+
+---
+
+Example Errors
+
+Error	Response
+
+overlay denied	permission recovery
+biometric failed	fallback auth
+service killed	auto restart
+
+
+
+---
+
+17. OEM COMPATIBILITY ARCHITECTURE
+
+OEM Problem Layer
+
+Some OEMs aggressively:
+
+kill services
+
+block overlays
+
+restrict background apps
+
+
+
+---
+
+OEM Compatibility Manager
+
+Tracks:
+
+device manufacturer
+
+permission state
+
+battery restrictions
+
+
+
+---
+
+OEM-Specific Guidance
+
+Provide:
+
+dynamic setup instructions
+
+recovery guides
+
+
+
+---
+
+18. PERFORMANCE ARCHITECTURE
+
+Performance Goals
+
+Metric	Target
+
+unlock latency	<300ms
+app startup	<2s
+UI FPS	60fps
+
+
+
+---
+
+Optimization Systems
+
+UI
+
+lazy rendering
+
+recomposition control
+
+
+
+---
+
+Services
+
+event-based monitoring
+
+cached sessions
+
+
+
+---
+
+Images
+
+thumbnail caching
+
+memory-efficient loading
+
+
+
+---
+
+19. TESTING ARCHITECTURE
+
+Testing Layers
+
+Unit Tests
+Integration Tests
+UI Tests
+Manual OEM Tests
+
+
+---
+
+Key Testing Areas
+
+overlay reliability
+
+unlock timing
+
+vault encryption
+
+OEM behavior
+
+battery impact
+
+
+
+---
+
+20. FUTURE SCALABILITY
+
+Architecture Must Support
+
+Future additions:
+
+decoy systems
+
+automation rules
+
+plugin modules
+
+advanced vault features
+
+
+without:
+
+major rewrites
+
+architecture collapse
+
+
+
+---
+
+21. FINAL ARCHITECTURE PRINCIPLE
+
+The architecture should behave like:
+
+a lightweight Android security platform
+
+NOT:
+
+a collection of disconnected utility screens
