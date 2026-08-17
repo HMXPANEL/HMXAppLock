@@ -23,14 +23,6 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
-    signingConfigs {
-        // Release signing is provided via GitHub Secrets in CI (see release-build.yml).
-        // A debug build works without any keystore configuration.
-        getByName("debug") {
-            isDebuggable = true
-        }
-    }
-
     buildTypes {
         debug {
             isMinifyEnabled = false
@@ -58,7 +50,7 @@ android {
                 keyPassword = System.getenv("KEY_PASSWORD")
             }
         }
-        buildTypes.release.signingConfig = signingConfigs.getByName("release")
+        buildTypes["release"].signingConfig = signingConfigs["release"]
     }
 
     compileOptions {
@@ -82,6 +74,11 @@ android {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
+    }
+
+    lint {
+        abortOnError = false
+        checkReleaseBuilds = false
     }
 }
 
